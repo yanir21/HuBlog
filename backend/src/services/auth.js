@@ -11,9 +11,13 @@ export const authenticate = (req, res, next) => {
           res.status(500).json({ message: error });
         } else if (result) {
           // Generate a JWT and send it as the response
-          const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-            expiresIn: "1d",
-          });
+          const token = jwt.sign(
+            { sub: user.id, username: user.username },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "1d",
+            }
+          );
           res.status(200).json({ token });
         } else {
           res.status(401).json({ message: "Incorrect password" });
