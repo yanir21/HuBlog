@@ -1,0 +1,14 @@
+.product-list {
+  margin-top: 5vh;
+}
+
+.title {
+  margin-top: 2vh;
+  align-self: baseline;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.row {
+  padding: 10px;
+}
