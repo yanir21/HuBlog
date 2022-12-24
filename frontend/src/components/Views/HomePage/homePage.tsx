@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Login from "../Login/login";
 import "./homepage.css";
 import { Button } from "react-bootstrap";
+import BlogPage from "../BlogPage/blogPage";
 
 const Home = () => {
   const token = localStorage.getItem("token");
@@ -12,9 +13,17 @@ const Home = () => {
   };
   return (
     <div className="home">
-      <div className="container">{token ? <>Hello</> : <Login />}</div>
+      {token ? (
+        <BlogPage />
+      ) : (
+        <div className="container">
+          <Login />
+        </div>
+      )}
       <br />
-      {token && <Button onClick={logOut}>Log Out</Button>}
+      <div className="container">
+        {token && <Button onClick={logOut}>Log Out</Button>}
+      </div>
     </div>
   );
 };

@@ -1,0 +1,13 @@
+.blog-page {
+  text-align: left;
+  padding: 30px;
+}
+
+.top-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.posts-container {
+  margin-top: 20px;
+}

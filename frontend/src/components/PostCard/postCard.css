@@ -1,0 +1,24 @@
+.post-card {
+  background-color: white;
+  width: 100%;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.divider {
+  border-top: 1px solid gray;
+  height: 0;
+}
+
+.top-details {
+  height: 40px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.content {
+  min-height: 100px;
+}
