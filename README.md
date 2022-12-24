@@ -1,3 +1,3 @@
 # Hublog
 
-Web Apllications course final Excercise
+Web Applications course final Excercise
