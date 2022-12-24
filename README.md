@@ -1,2 +1,3 @@
-# Makolet
-Web Apllications course 2nd Excercise
+# Hublog
+
+Web Apllications course final Excercise
