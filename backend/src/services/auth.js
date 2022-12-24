@@ -1,5 +1,9 @@
-export const authenticate = (req, res, next) => {
-  const { username, password } = req.body;
+const { User } = require("../models/user");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const authenticate = (req, res, next) => {
+  const { username, password } = req.body.body;
   User.findOne({ username }, (error, user) => {
     if (error) {
       res.status(500).json({ message: error });
@@ -25,10 +29,11 @@ export const authenticate = (req, res, next) => {
       });
     }
   });
+  return res;
 };
 
 // Verify a JWT
-export const verify = (req, res, next) => {
+const verify = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     res.status(401).json({ message: "No authorization header" });
@@ -41,3 +46,5 @@ export const verify = (req, res, next) => {
     });
   }
 };
+
+module.exports = { verify, authenticate };

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
+import Login from "../Login/login";
 import "./homepage.css";
 
 const Home = () => {
+  const token = localStorage.getItem("token");
   return (
     <div className="home">
-      <div className="container">
-        <div className="title">All Products</div>
-        <div className="product-list">
-          <div className="row"></div>
-        </div>
-      </div>
+      <div className="container">{token ? <>Hello</> : <Login />}</div>
     </div>
   );
 };

@@ -2,8 +2,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { Product } = require("./models/product");
-const { ShoppingCart } = require("./models/shoppingCart");
+const { Post } = require("./models/post");
+const { User } = require("./models/user");
+const { authenticate } = require("./services/auth");
 require("dotenv").config();
 
 const app = express();
@@ -14,24 +15,24 @@ app.use(cors());
 const username = process.env.MONGO_USERNAME;
 const password = process.env.MONGO_PASSWORD;
 
-app.get("/products", async (req, res) => {
-  const allProducts = await Product.find();
-  return res.status(200).json(allProducts);
+app.post("/login", authenticate);
+
+app.post("/register", async (req, res) => {
+  const newUser = new User({ ...req.body.body });
+  const insertedUser = await newUser.save();
+  return res.status(201).json(insertedUser);
 });
 
-app.post("/shopping-carts", async (req, res) => {
-  const products = req.body.products;
-  const newShoppingCart = new ShoppingCart({ ...req.body });
-  const insertedShoppingCart = await newShoppingCart.save();
-  return res.status(201).json(insertedShoppingCart);
+app.post("/posts", async (req, res) => {
+  return res;
 });
 
 const start = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://${username}:${password}@yanir-toar.0tfcqu7.mongodb.net/makolet?retryWrites=true&w=majority`
+      `mongodb+srv://${username}:${password}@yanir-toar.0tfcqu7.mongodb.net/hublog?retryWrites=true&w=majority`
     );
-    app.listen(3001, () => console.log("Server started on port 3000"));
+    app.listen(3001, () => console.log("Server started on port 3001"));
   } catch (error) {
     console.error(error);
     process.exit(1);

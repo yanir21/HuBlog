@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import "./login.css";
+import "./register.css";
 import { Button } from "react-bootstrap";
 import http from "../../../services/http";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { mutate, isLoading, error, data } = useMutation(
     (user: { username: string; password: string }) => {
-      return http.post("/login", {
+      return http.post("/register", {
         headers: { "Content-Type": "application/json" },
         body: user,
       });
     },
     {
       onSuccess: ({ data }) => {
-        localStorage.setItem("token", data.token);
+        console.log(data);
       },
     }
   );
@@ -31,7 +31,7 @@ const Login = () => {
     <div className="login-page">
       <br />
       <h4>Welcome to HuBlog!</h4>
-      <h5>Log in to view posts</h5>
+      <h5>Register Now:</h5>
       <form onSubmit={handleSubmit}>
         <div className="form-container">
           <div className="row">
@@ -63,15 +63,14 @@ const Login = () => {
           </div>
         </div>
         <Button type="submit" className="submit-button">
-          Log in
+          Register
         </Button>
-
         <br />
         <br />
-        <Link to="/register">Don't have an account yet?</Link>
+        <Link to="/">Already have an account?</Link>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
