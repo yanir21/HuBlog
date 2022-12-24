@@ -3,11 +3,13 @@ import { useMutation } from "@tanstack/react-query";
 import "./login.css";
 import { Button } from "react-bootstrap";
 import http from "../../../services/http";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorLabel, setErrorLabel] = useState<string>("");
   const { mutate, isLoading, error, data } = useMutation(
     (user: { username: string; password: string }) => {
       return http.post("/login", {
@@ -18,13 +20,23 @@ const Login = () => {
     {
       onSuccess: ({ data }) => {
         localStorage.setItem("token", data.token);
+        window.location.reload();
+      },
+      onError: (err: AxiosError) => {
+        if (err.response.status === 404) {
+          setErrorLabel("Invalid username or password");
+        }
       },
     }
   );
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    mutate({ username, password });
+    if (!password || !username) {
+      setErrorLabel("Please fill both username and password");
+    } else {
+      mutate({ username, password });
+    }
   };
 
   return (
@@ -62,6 +74,8 @@ const Login = () => {
             </div>
           </div>
         </div>
+        {!!errorLabel && <label className="error-label">{errorLabel}</label>}
+        <br />
         <Button type="submit" className="submit-button">
           Log in
         </Button>
