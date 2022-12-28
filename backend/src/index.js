@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { Post } = require("./models/post");
 const { User } = require("./models/user");
-const { authenticate } = require("./services/auth");
+const { authenticate, verify } = require("./services/auth");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +15,24 @@ app.use(cors());
 const username = process.env.MONGO_USERNAME;
 const password = process.env.MONGO_PASSWORD;
 
+app.use((req, res, next) => {
+  console.log(
+    "Time:",
+    Date.now().toLocaleString("HE-IL"),
+    "Method:",
+    req.method,
+    "Route: ",
+    req.path
+  );
+  if (req.path !== "/login" && req.path !== "/register") {
+    verify(req, res, next);
+  }
+  next();
+  res.on("finish", function () {
+    console.log("Response: ", res.statusCode);
+  });
+});
+
 app.post("/login", authenticate);
 
 app.post("/register", async (req, res) => {
@@ -23,9 +41,8 @@ app.post("/register", async (req, res) => {
   return res.status(201).json(insertedUser);
 });
 
-app.post("/posts", async (req, res) => {
-  return res;
-});
+const postRoutes = require("./routers/posts");
+app.use("/posts", postRoutes);
 
 const start = async () => {
   try {

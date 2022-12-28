@@ -4,7 +4,7 @@ import { Card } from "react-bootstrap";
 
 const PostCard = () => {
   return (
-    <Card border="secondary">
+    <div className="post-card">
       <Card.Header>
         <div className="top-details">
           <span className="autor-details">Idan Arad</span>
@@ -13,11 +13,9 @@ const PostCard = () => {
       </Card.Header>
       <Card.Body>
         <Card.Title>My Trip to Thailand</Card.Title>
-        <Card.Text>
-          <div className="content">AbcEfg</div>
-        </Card.Text>
+        <div className="content">AbcEfg</div>
       </Card.Body>
-    </Card>
+    </div>
   );
 };
 

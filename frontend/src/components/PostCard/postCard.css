@@ -1,8 +1,12 @@
 .post-card {
-  background-color: white;
-  width: 100%;
-  border: 1px solid grey;
+  height: 200px;
+  background: chartreuse;
+  margin: 20px 0;
+  background-color: #fff;
+  box-shadow: 0px 1px 2px rgba(50, 50, 50, 0.1),
+    0px 2px 4px rgba(60, 60, 60, 0.1);
   border-radius: 5px;
+  padding: 10px 30px;
 }
 
 .divider {
@@ -21,4 +25,8 @@
 
 .content {
   min-height: 100px;
+}
+
+.card-title {
+  margin-bottom: 10px;
 }

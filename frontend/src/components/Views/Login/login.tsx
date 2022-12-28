@@ -7,9 +7,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorLabel, setErrorLabel] = useState<string>("");
+
   const { mutate, isLoading, error, data } = useMutation(
     (user: { username: string; password: string }) => {
       return http.post("/login", {
@@ -20,10 +22,10 @@ const Login = () => {
     {
       onSuccess: ({ data }) => {
         localStorage.setItem("token", data.token);
-        window.location.reload();
+        navigate("/");
       },
       onError: (err: AxiosError) => {
-        if (err.response.status === 404) {
+        if ([404, 401].includes(err.response.status)) {
           setErrorLabel("Invalid username or password");
         }
       },
