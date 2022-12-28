@@ -36,6 +36,8 @@ const BlogPage = () => {
       <CreatePostModal
         show={showModal}
         handleClose={setShowModal.bind(this, false)}
+        postCreated={() => {}}
+        postCreationFailed={() => {}}
       />
     </div>
   );
