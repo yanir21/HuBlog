@@ -8,6 +8,11 @@
   font-weight: bold;
 }
 
+.top-row {
+  display: flex;
+  justify-content: space-between;
+}
+
 .posts-container {
   margin-top: 20px;
 }

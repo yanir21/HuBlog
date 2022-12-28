@@ -5,20 +5,25 @@ import { Button } from "react-bootstrap";
 import PostCard from "../../PostCard/postCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "../../../services/post";
+import CreatePostModal from "../../CreatePostModal/createPostModal";
 
 const BlogPage = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const { isLoading, data } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
   });
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <div className="blog-page">
-      <div className="top-title">Recent Posts</div>
+      <div className="top-row">
+        <span className="top-title">Recent Posts</span>
+        <span>
+          <Button onClick={setShowModal.bind(this, true)}>
+            Create New Post
+          </Button>
+        </span>
+      </div>
       <div className="posts-container">
         {isLoading ? (
           <>Loading Your Data...</>
@@ -28,6 +33,10 @@ const BlogPage = () => {
           <></>
         )}
       </div>
+      <CreatePostModal
+        show={showModal}
+        handleClose={setShowModal.bind(this, false)}
+      />
     </div>
   );
 };
