@@ -15,17 +15,17 @@ app.use(cors());
 const username = process.env.MONGO_USERNAME;
 const password = process.env.MONGO_PASSWORD;
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   console.log(
     "Time:",
-    Date.now().toLocaleString("HE-IL"),
+    new Date().toISOString(),
     "Method:",
     req.method,
     "Route: ",
     req.path
   );
   if (req.path !== "/login" && req.path !== "/register") {
-    verify(req, res, next);
+    req.root = await verify(req, res, next);
   }
   next();
   res.on("finish", function () {

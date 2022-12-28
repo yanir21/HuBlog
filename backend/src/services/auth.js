@@ -16,7 +16,7 @@ const authenticate = (req, res, next) => {
         } else if (result) {
           // Generate a JWT and send it as the response
           const token = jwt.sign(
-            { sub: user.id, username: user.username },
+            { id: user.id, username: user.username },
             process.env.JWT_SECRET,
             {
               expiresIn: "1d",
@@ -39,10 +39,11 @@ const verify = (req, res, next) => {
     res.status(401).json({ message: "No authorization header" });
   } else {
     const token = authorization.split(" ")[1];
-    const user = jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+    return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
       if (error) {
         res.status(401).json({ message: "Invalid token" });
       }
+      return decoded;
     });
   }
 };
