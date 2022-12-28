@@ -3,17 +3,30 @@ import Login from "../Login/login";
 import "./blogPage.css";
 import { Button } from "react-bootstrap";
 import PostCard from "../../PostCard/postCard";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPosts } from "../../../services/post";
 
 const BlogPage = () => {
-  const logOut = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
-  };
+  const { isLoading, data } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts,
+  });
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div className="blog-page">
       <div className="top-title">Recent Posts</div>
       <div className="posts-container">
-        <PostCard />
+        {isLoading ? (
+          <>Loading Your Data...</>
+        ) : !data || data.length === 0 ? (
+          <>No Posts to show</>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

@@ -4,7 +4,8 @@ const express = require("express"),
   router = express.Router();
 
 router.get("/", async (req, res) => {
-  res.status(200).json(getAllPosts());
+  res.json(await getAllPosts());
+  return res;
 });
 router.post("/", async (req, res) => {});
 router.get("/:id", async (req, res) => {});

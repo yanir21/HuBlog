@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { UserSchema } = require("./user");
 
 const PostSchema = new mongoose.Schema({
   title: {
@@ -6,11 +7,7 @@ const PostSchema = new mongoose.Schema({
     required: true,
   },
   author: {
-    type: Number,
-    required: true,
-  },
-  imageUrl: {
-    type: String,
+    type: UserSchema,
     required: true,
   },
   description: {
@@ -20,4 +17,4 @@ const PostSchema = new mongoose.Schema({
 
 const Post = mongoose.model("post", PostSchema);
 
-module.exports = { PostSchema };
+module.exports = { Post };
