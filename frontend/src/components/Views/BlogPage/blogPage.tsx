@@ -7,11 +7,12 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPosts } from "../../../services/post";
 import CreatePostModal from "../../CreatePostModal/createPostModal";
 import { Post } from "../../../models/post";
+import { promptError, promptSuccess } from "../../../services/toast";
 
 const BlogPage = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editedPost, setEditedPost] = useState<Post>();
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
   });
@@ -25,6 +26,7 @@ const BlogPage = () => {
     <div className="blog-page">
       <div className="top-row">
         <span className="top-title">Recent Posts</span>
+
         <span>
           <Button onClick={setShowModal.bind(this, true)}>
             Create New Post
@@ -52,8 +54,19 @@ const BlogPage = () => {
       <CreatePostModal
         show={showModal}
         handleClose={closeModal}
-        postCreated={closeModal}
-        postCreationFailed={closeModal}
+        postCreated={() => {
+          promptSuccess("Successfully created post");
+          closeModal();
+          refetch();
+        }}
+        postEdited={() => {
+          promptSuccess("Successfully edited post");
+          closeModal();
+          refetch();
+        }}
+        postCreationFailed={() => {
+          promptError("Error occured");
+        }}
         existingPost={editedPost}
       />
     </div>

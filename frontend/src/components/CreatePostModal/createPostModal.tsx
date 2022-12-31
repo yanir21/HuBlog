@@ -9,6 +9,7 @@ interface CreatePostModalProps {
   handleClose: () => void;
   postCreated: () => void;
   postCreationFailed: () => void;
+  postEdited: () => void;
   existingPost?: Post;
 }
 const CreatePostModal = (props: CreatePostModalProps) => {
@@ -38,7 +39,7 @@ const CreatePostModal = (props: CreatePostModalProps) => {
     },
     {
       onSuccess: ({ data }) => {
-        props.postCreated();
+        props.existingPost ? props.postEdited() : props.postCreated();
       },
       onError: (err) => {
         props.postCreationFailed();
