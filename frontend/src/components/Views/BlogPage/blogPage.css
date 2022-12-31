@@ -16,3 +16,8 @@
 .posts-container {
   margin-top: 20px;
 }
+
+.input-group {
+  width: 300px;
+  height: fit-content;
+}
