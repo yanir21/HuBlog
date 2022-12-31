@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { UserSchema } = require("./user");
+const { UserSchema, User } = require("./user");
 
 const PostSchema = new mongoose.Schema({
   title: {
@@ -7,10 +7,10 @@ const PostSchema = new mongoose.Schema({
     required: true,
   },
   author: {
-    type: UserSchema,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
-  description: {
+  content: {
     type: String,
   },
 });

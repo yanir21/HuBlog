@@ -30,3 +30,28 @@
 .card-title {
   margin-bottom: 10px;
 }
+
+.time-details {
+  margin-left: 10px;
+  color: gray;
+  font-weight: 100;
+  font-size: 1rem;
+}
+
+.edit-icon {
+  fill: gray;
+  transition: 0.2s;
+}
+
+.edit-icon:hover {
+  fill: blue;
+}
+
+.delete-icon {
+  margin-left: 6px;
+  fill: gray;
+}
+
+.delete-icon:hover {
+  fill: red;
+}

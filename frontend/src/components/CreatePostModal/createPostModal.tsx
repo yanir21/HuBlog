@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, FloatingLabel, Form } from "react-bootstrap";
 import { useMutation } from "@tanstack/react-query";
 import http from "../../services/http";
@@ -9,17 +9,32 @@ interface CreatePostModalProps {
   handleClose: () => void;
   postCreated: () => void;
   postCreationFailed: () => void;
+  existingPost?: Post;
 }
 const CreatePostModal = (props: CreatePostModalProps) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+
+  useEffect(() => {
+    const { existingPost } = props;
+    if (existingPost) {
+      setTitle(existingPost.title);
+      setContent(existingPost.content);
+    }
+  }, [props.existingPost]);
+
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { mutate, isLoading, error, data } = useMutation(
     (post: { content: string; title: string }) => {
-      return http.post("/posts", {
-        headers: { "Content-Type": "application/json" },
-        body: post,
-      });
+      return props.existingPost
+        ? http.put(`/posts/${props.existingPost._id}`, {
+            headers: { "Content-Type": "application/json" },
+            body: post,
+          })
+        : http.post("/posts", {
+            headers: { "Content-Type": "application/json" },
+            body: post,
+          });
     },
     {
       onSuccess: ({ data }) => {
@@ -53,7 +68,9 @@ const CreatePostModal = (props: CreatePostModalProps) => {
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Create New Post</Modal.Title>
+        <Modal.Title>
+          {props.existingPost ? "Edit post" : "Create New Post"}{" "}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <FloatingLabel controlId="floatingInput" label="Title" className="mb-3">
@@ -78,7 +95,7 @@ const CreatePostModal = (props: CreatePostModalProps) => {
           Cancel
         </Button>
         <Button variant="primary" onClick={submitForm}>
-          Create
+          {props.existingPost ? "Edit" : "Create"}
         </Button>
       </Modal.Footer>
     </Modal>
