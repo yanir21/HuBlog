@@ -45,7 +45,7 @@ const postRoutes = require("./routers/posts");
 app.use("/posts", postRoutes);
 
 const photoRoutes = require("./routers/photos");
-app.use("/photos", postRoutes);
+app.use("/photos", photoRoutes);
 
 const start = async () => {
   try {

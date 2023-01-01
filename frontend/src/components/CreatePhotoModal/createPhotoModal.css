@@ -1,0 +1,30 @@
+.ReactTags__tagInputField:focus-visible {
+  outline: none;
+}
+
+.tag-container {
+  margin-top: 10px;
+}
+
+.react-tags-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  margin: 10px 0;
+}
+
+.ReactTags__selected {
+  margin-top: 16px;
+}
+
+.ReactTags__tag {
+  padding: 6px;
+  padding-left: 12px;
+  background-color: #f0f0f0;
+  height: fit-content;
+  border-radius: 5px;
+  margin-right: 4px;
+}
+
+.ReactTags__remove {
+  border: none;
+}

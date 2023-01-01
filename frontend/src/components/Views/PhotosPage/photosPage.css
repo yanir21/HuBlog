@@ -1,0 +1,35 @@
+.blog-page {
+  text-align: left;
+  padding: 30px;
+}
+
+.top-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.posts-container {
+  margin-top: 20px;
+}
+
+.input-group {
+  width: 300px;
+  height: fit-content;
+}
+
+.search-options {
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+  color: initial;
+}
+
+.search-options-container {
+  margin-top: 4px;
+  color: gray;
+}

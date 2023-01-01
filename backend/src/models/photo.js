@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
-const { UserSchema, User } = require("./user");
 
 const PhotoSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  timestamp: {
+  date: {
     type: Date,
     required: true,
   },

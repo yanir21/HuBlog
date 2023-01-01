@@ -3,7 +3,6 @@ import { Modal, Button, FloatingLabel, Form } from "react-bootstrap";
 import { useMutation } from "@tanstack/react-query";
 import http from "../../services/http";
 import { Post } from "../../models/post";
-import { AxiosError } from "axios";
 interface CreatePostModalProps {
   show: boolean;
   handleClose: () => void;
@@ -21,6 +20,9 @@ const CreatePostModal = (props: CreatePostModalProps) => {
     if (existingPost) {
       setTitle(existingPost.title);
       setContent(existingPost.content);
+    } else {
+      setTitle("");
+      setContent("");
     }
   }, [props.existingPost]);
 

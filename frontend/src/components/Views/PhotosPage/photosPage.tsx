@@ -1,38 +1,40 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Login from "../Login/login";
-import "./postsPage.css";
+import "./photosPage.css";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
-import PostCard from "../../PostCard/postCard";
+import PhotoCard from "../../PhotoCard/photoCard";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "../../../services/post";
-import CreatePostModal from "../../CreatePostModal/createPostModal";
-import { Post } from "../../../models/post";
+import CreatePhotoModal from "../../CreatePhotoModal/createPhotoModal";
+import { Photo } from "../../../models/photo";
 import { promptError, promptSuccess } from "../../../services/toast";
 import { Search } from "react-bootstrap-icons";
 import PageLayout from "../PageLayout/pageLayout";
+import { fetchPhoto } from "../../../services/photo";
 
-const searchOptions: (keyof Post)[] = ["title", "content", "author"];
+const searchOptions: (keyof Photo)[] = ["caption", "tags", "author"];
 
-const PostsPage = () => {
+const PhotosPage = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [editedPost, setEditedPost] = useState<Post>();
+  const [editedPhoto, setEditedPhoto] = useState<Photo>();
   const [search, setSearch] = useState<string>("");
-  const [searchField, setSearchField] = useState<keyof Post>("title");
+  const [searchField, setSearchField] = useState<keyof Photo>("caption");
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
+    queryKey: ["photos"],
+    queryFn: fetchPhoto,
   });
 
   const closeModal = () => {
-    setEditedPost(undefined);
+    setEditedPhoto(undefined);
     setShowModal(false);
   };
 
-  const filteredPosts = useMemo(
+  const filteredPhotos = useMemo(
     () =>
       searchField === "author"
-        ? data.filter((post) => post.author.username.includes(search))
-        : data?.filter((post) => post[searchField].toString().includes(search)),
+        ? data.filter((photo) => photo.author.username.includes(search))
+        : data?.filter((photo) =>
+            photo?.[searchField]?.toString().includes(search)
+          ),
     [data, search, searchField]
   );
 
@@ -40,7 +42,7 @@ const PostsPage = () => {
     <PageLayout>
       <div className="blog-page">
         <div className="top-row">
-          <span className="top-title">Recent Posts</span>
+          <span className="top-title">Recent Photos</span>
           <span className="search-box">
             <InputGroup className="input-group">
               <InputGroup.Text>
@@ -72,57 +74,61 @@ const PostsPage = () => {
           <span>
             <Button
               onClick={() => {
-                setEditedPost(undefined);
+                setEditedPhoto(null);
                 setShowModal(true);
               }}
             >
-              Create New Post
+              Create New Photo
             </Button>
           </span>
         </div>
-        <div className="posts-container">
-          {isLoading ? (
-            <>Loading Your Data...</>
-          ) : !filteredPosts || filteredPosts.length === 0 ? (
-            <>No Posts to show</>
-          ) : (
-            filteredPosts.map((blogPost) => (
-              <PostCard
-                key={blogPost._id}
-                post={blogPost}
-                onPostEdit={() => {
-                  setEditedPost(blogPost);
-                  setShowModal(true);
-                }}
-                onPostDelete={() => {
-                  promptSuccess("Successfully deleted post");
-                  refetch();
-                }}
-              />
-            ))
-          )}
+        <div className="photos-container">
+          <div className="row">
+            {isLoading ? (
+              <>Loading Your Data...</>
+            ) : !filteredPhotos || filteredPhotos.length === 0 ? (
+              <>No Photos to show</>
+            ) : (
+              filteredPhotos.map((blogPhoto) => (
+                <span className="col-6">
+                  <PhotoCard
+                    key={blogPhoto._id}
+                    photo={blogPhoto}
+                    onPhotoEdit={() => {
+                      setEditedPhoto(blogPhoto);
+                      setShowModal(true);
+                    }}
+                    onPhotoDelete={() => {
+                      promptSuccess("Successfully deleted photo");
+                      refetch();
+                    }}
+                  />
+                </span>
+              ))
+            )}
+          </div>
         </div>
-        <CreatePostModal
+        <CreatePhotoModal
           show={showModal}
           handleClose={closeModal}
-          postCreated={() => {
-            promptSuccess("Successfully created post");
+          photoCreated={() => {
+            promptSuccess("Successfully created photo");
             closeModal();
             refetch();
           }}
-          postEdited={() => {
-            promptSuccess("Successfully edited post");
+          photoEdited={() => {
+            promptSuccess("Successfully edited photo");
             closeModal();
             refetch();
           }}
-          postCreationFailed={() => {
+          photoCreationFailed={() => {
             promptError("Error occured");
           }}
-          existingPost={editedPost}
+          existingPhoto={editedPhoto}
         />
       </div>
     </PageLayout>
   );
 };
 
-export default PostsPage;
+export default PhotosPage;

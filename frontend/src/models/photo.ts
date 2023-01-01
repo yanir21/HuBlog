@@ -1,6 +1,6 @@
 import { User } from "./user";
 
-export interface Post {
+export interface Photo {
   _id: string;
   date: Date;
   author: User;
