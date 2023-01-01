@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { UserSchema, User } = require("./user");
 
 const PostSchema = new mongoose.Schema({
   title: {

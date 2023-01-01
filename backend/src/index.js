@@ -44,6 +44,9 @@ app.post("/register", async (req, res) => {
 const postRoutes = require("./routers/posts");
 app.use("/posts", postRoutes);
 
+const photoRoutes = require("./routers/photos");
+app.use("/photos", postRoutes);
+
 const start = async () => {
   try {
     await mongoose.connect(
