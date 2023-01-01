@@ -53,4 +53,7 @@ const verify = (req, res, next) => {
   }
 };
 
-module.exports = { verify, authenticate };
+const getUser = (req, res) => {
+  User.findById(req.root.id, (err, user) => res.json(user));
+};
+module.exports = { verify, authenticate, getUser };

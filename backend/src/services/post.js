@@ -1,7 +1,9 @@
 const { Post } = require("../models/post");
 
 const getAllPosts = async () =>
-  await Post.find({}).populate({ path: "author", select: "-_id username" });
+  await Post.find({})
+    .populate({ path: "author", select: "-_id username" })
+    .sort({ date: "desc" });
 const createPost = async (req, res) => {
   const user = req.root;
   const post = req.body.body;

@@ -10,6 +10,7 @@ import { promptError, promptSuccess } from "../../../services/toast";
 import { Search } from "react-bootstrap-icons";
 import PageLayout from "../PageLayout/pageLayout";
 import { fetchPhoto } from "../../../services/photo";
+import { getCurrentUser } from "../../../services/user";
 
 const searchOptions: (keyof Photo)[] = ["caption", "tags", "author"];
 
@@ -21,6 +22,15 @@ const PhotosPage = () => {
   const { isLoading, data, refetch } = useQuery({
     queryKey: ["photos"],
     queryFn: fetchPhoto,
+  });
+
+  const {
+    isLoading: isUserLoading,
+    data: user,
+    refetch: userRefetch,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: getCurrentUser,
   });
 
   const closeModal = () => {
@@ -90,9 +100,8 @@ const PhotosPage = () => {
               <>No Photos to show</>
             ) : (
               filteredPhotos.map((blogPhoto) => (
-                <span className="col-6">
+                <span key={blogPhoto._id} className="col-6">
                   <PhotoCard
-                    key={blogPhoto._id}
                     photo={blogPhoto}
                     onPhotoEdit={() => {
                       setEditedPhoto(blogPhoto);
@@ -102,6 +111,10 @@ const PhotosPage = () => {
                       promptSuccess("Successfully deleted photo");
                       refetch();
                     }}
+                    showActions={
+                      user?.isAdmin ||
+                      user.username === blogPhoto.author.username
+                    }
                   />
                 </span>
               ))

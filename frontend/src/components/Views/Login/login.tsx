@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import "./login.css";
 import { Button } from "react-bootstrap";
 import http from "../../../services/http";
 import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
+import { promptSuccess } from "../../../services/toast";
+import { getCurrentUser } from "../../../services/user";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,7 +24,9 @@ const Login = () => {
     {
       onSuccess: ({ data }) => {
         localStorage.setItem("token", data.token);
+        promptSuccess("Successfully logged in");
         navigate("/");
+        userRefetch();
       },
       onError: (err: AxiosError) => {
         if ([404, 401].includes(err.response.status)) {
@@ -31,6 +35,15 @@ const Login = () => {
       },
     }
   );
+
+  const {
+    isLoading: isUserLoading,
+    data: user,
+    refetch: userRefetch,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: getCurrentUser,
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();

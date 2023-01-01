@@ -3,9 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 import "./register.css";
 import { Button } from "react-bootstrap";
 import http from "../../../services/http";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { promptSuccess } from "../../../services/toast";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { mutate, isLoading, error, data } = useMutation(
@@ -17,7 +19,11 @@ const Register = () => {
     },
     {
       onSuccess: ({ data }) => {
-        console.log(data);
+        promptSuccess("Successfully Registered");
+        navigate("/login");
+      },
+      onError: (error) => {
+        promptSuccess("Error occured");
       },
     }
   );

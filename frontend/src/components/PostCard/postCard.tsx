@@ -9,10 +9,11 @@ interface PostCardProps {
   post: Post;
   onPostEdit: () => void;
   onPostDelete: () => void;
+  showActions: boolean;
 }
 
 const PostCard = (props: PostCardProps) => {
-  const { post, onPostEdit } = props;
+  const { post, onPostEdit, showActions } = props;
   const [showValidationModal, setShowValidationModal] =
     useState<boolean>(false);
 
@@ -32,13 +33,15 @@ const PostCard = (props: PostCardProps) => {
       <Card.Header>
         <div className="top-details">
           <span className="autor-details">{post.author.username}</span>
-          <span className="actions">
-            <Pencil className="edit-icon" onClick={onPostEdit} />
-            <Trash
-              className="delete-icon"
-              onClick={setShowValidationModal.bind(this, true)}
-            />
-          </span>
+          {showActions && (
+            <span className="actions">
+              <Pencil className="edit-icon" onClick={onPostEdit} />
+              <Trash
+                className="delete-icon"
+                onClick={setShowValidationModal.bind(this, true)}
+              />
+            </span>
+          )}
         </div>
       </Card.Header>
       <Card.Body>

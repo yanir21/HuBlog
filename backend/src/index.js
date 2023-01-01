@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { Post } = require("./models/post");
 const { User } = require("./models/user");
-const { authenticate, verify } = require("./services/auth");
+const { authenticate, verify, getUser } = require("./services/auth");
 require("dotenv").config();
 
 const app = express();
@@ -27,13 +27,18 @@ app.use(async (req, res, next) => {
   if (req.path !== "/login" && req.path !== "/register") {
     req.root = await verify(req, res, next);
   }
-  next();
+  if (!res.destroyed) {
+    next();
+  } else {
+    console.log("Response: ", res.statusCode, res.statusMessage);
+  }
   res.on("finish", function () {
     console.log("Response: ", res.statusCode);
   });
 });
 
 app.post("/login", authenticate);
+app.get("/me", getUser);
 
 app.post("/register", async (req, res) => {
   const newUser = new User({ ...req.body.body });
@@ -45,6 +50,7 @@ const postRoutes = require("./routers/posts");
 app.use("/posts", postRoutes);
 
 const photoRoutes = require("./routers/photos");
+const e = require("express");
 app.use("/photos", photoRoutes);
 
 const start = async () => {

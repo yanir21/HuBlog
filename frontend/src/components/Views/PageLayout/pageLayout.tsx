@@ -27,7 +27,7 @@ const PageLayout = (props: PageLayoutProps) => {
     <div className="page-layout">
       {props.children}
       <br />
-      <div className="container">
+      <div className="log-out">
         <Button onClick={logOut}>Log Out</Button>
       </div>
     </div>

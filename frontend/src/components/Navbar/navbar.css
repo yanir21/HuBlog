@@ -1,3 +1,9 @@
 .brand {
   margin-left: 2vh;
 }
+
+.user-details {
+  color: white;
+  margin-right: 10px;
+  font-weight: 600;
+}

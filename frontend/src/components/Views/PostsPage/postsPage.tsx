@@ -10,6 +10,7 @@ import { Post } from "../../../models/post";
 import { promptError, promptSuccess } from "../../../services/toast";
 import { Search } from "react-bootstrap-icons";
 import PageLayout from "../PageLayout/pageLayout";
+import { getCurrentUser } from "../../../services/user";
 
 const searchOptions: (keyof Post)[] = ["title", "content", "author"];
 
@@ -21,6 +22,15 @@ const PostsPage = () => {
   const { isLoading, data, refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
+  });
+
+  const {
+    isLoading: isUserLoading,
+    data: user,
+    refetch: userRefetch,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: getCurrentUser,
   });
 
   const closeModal = () => {
@@ -98,6 +108,9 @@ const PostsPage = () => {
                   promptSuccess("Successfully deleted post");
                   refetch();
                 }}
+                showActions={
+                  user?.isAdmin || user?.username === blogPost.author.username
+                }
               />
             ))
           )}

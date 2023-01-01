@@ -9,10 +9,11 @@ interface PhotoCardProps {
   photo: Photo;
   onPhotoEdit: () => void;
   onPhotoDelete: () => void;
+  showActions: boolean;
 }
 
 const PhotoCard = (props: PhotoCardProps) => {
-  const { photo, onPhotoEdit } = props;
+  const { photo, onPhotoEdit, showActions } = props;
   const [showValidationModal, setShowValidationModal] =
     useState<boolean>(false);
 
@@ -32,13 +33,15 @@ const PhotoCard = (props: PhotoCardProps) => {
       <Card.Header>
         <div className="top-details">
           <span className="autor-details">{photo.author.username}</span>
-          <span className="actions">
-            <Pencil className="edit-icon" onClick={onPhotoEdit} />
-            <Trash
-              className="delete-icon"
-              onClick={setShowValidationModal.bind(this, true)}
-            />
-          </span>
+          {showActions && (
+            <span className="actions">
+              <Pencil className="edit-icon" onClick={onPhotoEdit} />
+              <Trash
+                className="delete-icon"
+                onClick={setShowValidationModal.bind(this, true)}
+              />
+            </span>
+          )}
         </div>
       </Card.Header>
       <Card.Body>
@@ -50,7 +53,9 @@ const PhotoCard = (props: PhotoCardProps) => {
       </Card.Title>
       <div className="tags">
         {photo.tags.map((tag) => (
-          <span className="tag">{tag}</span>
+          <span className="tag" key={tag}>
+            {tag}
+          </span>
         ))}
       </div>
       <DeletePhotoModal
