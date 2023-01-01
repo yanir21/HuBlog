@@ -8,6 +8,7 @@ import DeletePostModal from "../DeletePostModal/deletePostModal";
 interface PostCardProps {
   post: Post;
   onPostEdit: () => void;
+  onPostDelete: () => void;
 }
 
 const PostCard = (props: PostCardProps) => {
@@ -52,7 +53,10 @@ const PostCard = (props: PostCardProps) => {
         post={post}
         handleClose={closeModal}
         postDeletedFailed={closeModal}
-        postDeleted={closeModal}
+        postDeleted={() => {
+          closeModal();
+          props.onPostDelete();
+        }}
       />
     </div>
   );

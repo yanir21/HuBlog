@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import Login from "../Login/login";
 import "./pageLayout.css";
 import { Button } from "react-bootstrap";
-import BlogPage from "../BlogPage/blogPage";
+import PostsPage from "../PostsPage/postsPage";
 import { useNavigate } from "react-router-dom";
 
-const PageLayout = () => {
+interface PageLayoutProps {
+  children: ReactNode;
+}
+
+const PageLayout = (props: PageLayoutProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +25,7 @@ const PageLayout = () => {
   };
   return (
     <div className="page-layout">
-      <BlogPage />
+      {props.children}
       <br />
       <div className="container">
         <Button onClick={logOut}>Log Out</Button>

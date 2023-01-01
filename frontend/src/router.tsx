@@ -3,10 +3,13 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./components/Views/Login/login";
 import Register from "./components/Views/Register/register";
 import PageLayout from "./components/Views/PageLayout/pageLayout";
+import HomePage from "./components/Views/HomePage/homePage";
+import PostsPage from "./components/Views/PostsPage/postsPage";
 
 const Router = () => (
   <Routes>
-    <Route path="/" element={<PageLayout />} />
+    <Route path="/" element={<HomePage />} />
+    <Route path="/posts" element={<PostsPage />} />
     <Route path="/register" element={<Register />} />
     <Route path="/login" element={<Login />} />
   </Routes>
