@@ -10,6 +10,8 @@ import { Post } from "../../../models/post";
 import { promptError, promptSuccess } from "../../../services/toast";
 import { Search } from "react-bootstrap-icons";
 
+const searchOptions: (keyof Post)[] = ["title", "content", "author"];
+
 const BlogPage = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editedPost, setEditedPost] = useState<Post>();
@@ -26,25 +28,45 @@ const BlogPage = () => {
   };
 
   const filteredPosts = useMemo(
-    () => data?.filter((post) => post[searchField].toString().includes(search)),
-    [data, search, Search]
+    () =>
+      searchField === "author"
+        ? data.filter((post) => post.author.username.includes(search))
+        : data?.filter((post) => post[searchField].includes(search)),
+    [data, search, searchField]
   );
 
   return (
     <div className="blog-page">
       <div className="top-row">
         <span className="top-title">Recent Posts</span>
-        <InputGroup className="input-group">
-          <InputGroup.Text>
-            <Search />
-          </InputGroup.Text>
-          <Form.Control
-            type="text"
-            placeholder={`Search by ${searchField}`}
-            value={search}
-            onChange={({ target }) => setSearch(target.value)}
-          />
-        </InputGroup>
+        <span className="search-box">
+          <InputGroup className="input-group">
+            <InputGroup.Text>
+              <Search />
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              placeholder={`Search by ${searchField}`}
+              value={search}
+              onChange={({ target }) => setSearch(target.value)}
+            />
+          </InputGroup>
+          <div className="search-options-container">
+            Search by:
+            <div className="search-options">
+              {searchOptions.map((option) => (
+                <Form.Check
+                  key={option}
+                  type="radio"
+                  value={option}
+                  label={option}
+                  checked={searchField === option}
+                  onChange={setSearchField.bind(this, option)}
+                />
+              ))}
+            </div>
+          </div>
+        </span>
         <span>
           <Button onClick={setShowModal.bind(this, true)}>
             Create New Post

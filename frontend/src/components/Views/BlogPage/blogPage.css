@@ -21,3 +21,15 @@
   width: 300px;
   height: fit-content;
 }
+
+.search-options {
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+  color: initial;
+}
+
+.search-options-container {
+  margin-top: 4px;
+  color: gray;
+}
