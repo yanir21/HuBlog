@@ -41,6 +41,7 @@
 .edit-icon {
   fill: gray;
   transition: 0.2s;
+  cursor: pointer;
 }
 
 .edit-icon:hover {
@@ -50,6 +51,7 @@
 .delete-icon {
   margin-left: 6px;
   fill: gray;
+  cursor: pointer;
 }
 
 .delete-icon:hover {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./postCard.css";
 import { Card } from "react-bootstrap";
 import { Post } from "../../models/post";
@@ -19,6 +19,13 @@ const PostCard = (props: PostCardProps) => {
     setShowValidationModal(false);
   };
 
+  const dateString = useMemo(() => {
+    const date = new Date(post.date);
+    return `${date.toLocaleDateString()} on ${date
+      .toLocaleTimeString()
+      .slice(0, 5)}`;
+  }, [post]);
+
   return (
     <div className="post-card">
       <Card.Header>
@@ -36,7 +43,7 @@ const PostCard = (props: PostCardProps) => {
       <Card.Body>
         <Card.Title>
           {post.title}
-          <span className="time-details">11/02/2022 on 13:45</span>
+          <span className="time-details">{dateString}</span>
         </Card.Title>
         <div className="content">{post.content}</div>
       </Card.Body>

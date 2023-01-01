@@ -31,7 +31,7 @@ const BlogPage = () => {
     () =>
       searchField === "author"
         ? data.filter((post) => post.author.username.includes(search))
-        : data?.filter((post) => post[searchField].includes(search)),
+        : data?.filter((post) => post[searchField].toString().includes(search)),
     [data, search, searchField]
   );
 

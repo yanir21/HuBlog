@@ -5,7 +5,7 @@ const getAllPosts = async () =>
 const createPost = async (req, res) => {
   const user = req.root;
   const post = req.body.body;
-  await Post.create({ ...post, author: user.id });
+  await Post.create({ ...post, author: user.id, date: new Date() });
   res.send("Post added successfully");
 };
 

@@ -39,12 +39,17 @@ const verify = (req, res, next) => {
     res.status(401).json({ message: "No authorization header" });
   } else {
     const token = authorization.split(" ")[1];
-    return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-      if (error) {
-        res.status(401).json({ message: "Invalid token" });
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET,
+      (error, decoded) => {
+        if (error) {
+          res.status(401).json({ message: "Invalid token" });
+        }
+        return decoded;
       }
-      return decoded;
-    });
+    );
+    return decoded;
   }
 };
 
