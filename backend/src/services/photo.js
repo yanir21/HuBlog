@@ -31,7 +31,7 @@ const editPhoto = async (req, res) => {
 };
 
 const getPopularTags = (req, res) => {
-  UserPost.aggregate([
+  Photo.aggregate([
     { $unwind: "$tags" },
     {
       $group: {
@@ -46,4 +46,10 @@ const getPopularTags = (req, res) => {
   });
 };
 
-module.exports = { getAllPhotos, createPhoto, deletePhoto, editPhoto };
+module.exports = {
+  getAllPhotos,
+  createPhoto,
+  deletePhoto,
+  editPhoto,
+  getPopularTags,
+};

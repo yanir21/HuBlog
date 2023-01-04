@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal, Button, FloatingLabel, Form } from "react-bootstrap";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import http from "../../services/http";
 import { Photo } from "../../models/photo";
 import { WithContext as ReactTags } from "react-tag-input";
 import { AxiosError } from "axios";
 import "./createPhotoModal.css";
+import { getPopularTags } from "../../services/photo";
 interface CreatePhotoModalProps {
   show: boolean;
   handleClose: () => void;
@@ -18,6 +19,15 @@ const CreatePhotoModal = (props: CreatePhotoModalProps) => {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [caption, setCaption] = useState<string>("");
   const [tags, setTags] = useState<{ id: string; text: string }[]>([]);
+
+  const {
+    isLoading: tagLoading,
+    data: tagSuggestions,
+    refetch,
+  } = useQuery({
+    queryKey: ["tags"],
+    queryFn: getPopularTags,
+  });
 
   useEffect(() => {
     const { existingPhoto } = props;
@@ -87,12 +97,10 @@ const CreatePhotoModal = (props: CreatePhotoModalProps) => {
     enter: 13,
   };
 
-  const suggestions = [
-    { id: "1", text: "mango" },
-    { id: "2", text: "pineapple" },
-    { id: "3", text: "orange" },
-    { id: "4", text: "pear" },
-  ];
+  const formatedSuggestions = useMemo(
+    () => tagSuggestions?.map((tag) => ({ text: tag._id, id: tag._id })) ?? [],
+    [tagSuggestions]
+  );
 
   return (
     <Modal show={props.show} onHide={props.handleClose}>
@@ -124,7 +132,7 @@ const CreatePhotoModal = (props: CreatePhotoModalProps) => {
         <div className="tag-container">
           <ReactTags
             tags={tags}
-            suggestions={suggestions}
+            suggestions={formatedSuggestions}
             delimiters={[KeyCodes.comma, KeyCodes.enter]}
             handleDelete={handleTabDelete}
             handleAddition={handleTabAdd}
@@ -132,6 +140,7 @@ const CreatePhotoModal = (props: CreatePhotoModalProps) => {
             autocomplete
             placeholder="Add tags..."
             classNames={{ tagInputField: "form-control" }}
+            minQueryLength={1}
           />
         </div>
         {errorMessage && <span className="error-message">{errorMessage}</span>}

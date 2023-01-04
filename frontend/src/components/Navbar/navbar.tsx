@@ -30,6 +30,11 @@ const AppNavbar = () => {
         <Nav.Link as={Link} to="/photos">
           Photos
         </Nav.Link>
+        {user?.isAdmin && (
+          <Nav.Link as={Link} to="/admin">
+            Manage Site
+          </Nav.Link>
+        )}
       </Nav>
       <div className="user-details">
         {user && `Connected as ${user.username}`}

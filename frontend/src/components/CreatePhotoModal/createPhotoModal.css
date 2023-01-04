@@ -28,3 +28,11 @@
 .ReactTags__remove {
   border: none;
 }
+
+.ReactTags__suggestions {
+  background-color: beige;
+  min-height: 50px;
+  border: 1px solid bisque;
+  border-radius: 5px;
+  list-style-type: none !important;
+}
