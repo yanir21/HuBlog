@@ -50,7 +50,6 @@ const postRoutes = require("./routers/posts");
 app.use("/posts", postRoutes);
 
 const photoRoutes = require("./routers/photos");
-const e = require("express");
 app.use("/photos", photoRoutes);
 
 const start = async () => {
