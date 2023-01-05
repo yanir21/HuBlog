@@ -52,6 +52,9 @@ app.use("/posts", postRoutes);
 const photoRoutes = require("./routers/photos");
 app.use("/photos", photoRoutes);
 
+const userRoutes = require("./routers/users");
+app.use("/users", userRoutes);
+
 const start = async () => {
   try {
     await mongoose.connect(

@@ -7,16 +7,16 @@ const AdminPage = () => {
     queryKey: ["user"],
     queryFn: getCurrentUser,
   });
-  //   const { data: users } = useQuery({
-  //     queryKey: ["allUsers"],
-  //     queryFn: getAllUsers,
-  //   });
+  const { data: users } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: getAllUsers,
+  });
   return user?.isAdmin ? (
     <div className="admin-page">
       <div className="top-title">Manage Site</div>
       <div className="section-title">Users</div>
       <div className="users-list">
-        {/* {users.map((user) => (
+        { users?.map((user) => (
           <span className="user-card">
             <span>
               Name:
@@ -24,7 +24,7 @@ const AdminPage = () => {
             </span>
             <span>Admin? {user.isAdmin}</span>
           </span>
-        ))} */}
+        )) }
       </div>
     </div>
   ) : (
