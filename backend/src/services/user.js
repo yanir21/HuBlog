@@ -1,7 +1,6 @@
 const { User } = require("../models/user");
 
-const getAllUsers = async (req, res) =>
-  await User.find({}).select("-_id username isAdmin");
+const getAllUsers = async (req, res) => await User.find({}).select("-password");
 
 const deleteUser = async (req, res) => {
   User.findByIdAndDelete(req.params.id, (error) => {

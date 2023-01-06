@@ -14,6 +14,14 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  birthdate: {
+    type: Date,
+    default: new Date(),
+  },
+  rating: {
+    type: Number,
+    default: 1,
+  },
 });
 
 UserSchema.pre("save", function (next) {
