@@ -13,14 +13,14 @@ const PageLayout = (props: PageLayoutProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) {
       navigate("/login");
     }
   }, []);
 
   const logOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.reload();
   };
   return (

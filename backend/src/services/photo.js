@@ -6,7 +6,12 @@ const getAllPhotos = async () =>
 const createPhoto = async (req, res) => {
   const user = req.root;
   const photo = req.body.body;
-  await Photo.create({ ...photo, author: user.id, date: new Date() });
+  const createdPhoto = await Photo.create({
+    ...photo,
+    author: user.id,
+    date: new Date(),
+  });
+  req.io.sockets.emit("new-photo", createdPhoto);
   res.send("Photo added successfully");
 };
 

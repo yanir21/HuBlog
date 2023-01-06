@@ -23,7 +23,7 @@ const Login = () => {
     },
     {
       onSuccess: ({ data }) => {
-        localStorage.setItem("token", data.token);
+        sessionStorage.setItem("token", data.token);
         promptSuccess("Successfully logged in");
         navigate("/");
         userRefetch();
