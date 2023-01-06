@@ -27,23 +27,29 @@ const UserCard = (props: UserCardProps) => {
   }, [user]);
 
   return (
-    <div className={`user-card ${user.isAdmin ? "user-card-admin" : "user-card-not-admin"}`}>
-        <div className="top-user-details">
-          <span className="username-details">{user.username}</span>
-          { showActions && (
-            <span className="actions">
-              <Pencil className="edit-icon" onClick={onUserEdit} />
-              <Trash
-                className="delete-icon"
-                onClick={setShowValidationModal.bind(this, true)}
-              />
-            </span>
-          )}
-        </div>
-        <div className="content">
-            <span className="username-birthdate">Born on: {dateString}</span>
-            <span className="username-rating">Rating: {user.rating.toString()} Stars</span>
-        </div>
+    <div
+      className={`user-card ${
+        user.isAdmin ? "user-card-admin" : "user-card-not-admin"
+      }`}
+    >
+      <div className="top-user-details">
+        <span className="username-details">{user.username}</span>
+        {showActions && (
+          <span className="actions">
+            <Pencil className="edit-icon" onClick={onUserEdit} />
+            <Trash
+              className="delete-icon"
+              onClick={setShowValidationModal.bind(this, true)}
+            />
+          </span>
+        )}
+      </div>
+      <div className="user-content">
+        <span className="username-birthdate">Born on: {dateString}</span>
+        <span className="username-rating">
+          Rating: {user.rating.toString()} Stars
+        </span>
+      </div>
       <DeleteUserModal
         show={showValidationModal}
         user={user}
