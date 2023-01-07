@@ -4,10 +4,24 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { Post } = require("./models/post");
 const { User } = require("./models/user");
+const socketIo = require("socket.io");
 const { authenticate, verify, getUser } = require("./services/auth");
+const http = require("http");
 require("dotenv").config();
+const PORT = 3001;
 
 const app = express();
+const server = http.createServer(app);
+
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("client connected: ", socket.id);
+});
 
 app.use(express.json());
 app.use(cors());
@@ -24,6 +38,7 @@ app.use(async (req, res, next) => {
     "Route: ",
     req.path
   );
+  req.io = io;
   if (req.path !== "/login" && req.path !== "/register") {
     req.root = await verify(req, res, next);
   }
@@ -60,7 +75,10 @@ const start = async () => {
     await mongoose.connect(
       `mongodb+srv://${username}:${password}@yanir-toar.0tfcqu7.mongodb.net/hublog?retryWrites=true&w=majority`
     );
-    app.listen(3001, () => console.log("Server started on port 3001"));
+    server.listen(PORT, (err) => {
+      if (err) console.log(err);
+      console.log("Server running on Port ", PORT);
+    });
   } catch (error) {
     console.error(error);
     process.exit(1);

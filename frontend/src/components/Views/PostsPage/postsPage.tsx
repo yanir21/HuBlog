@@ -19,8 +19,9 @@ const PostsPage = () => {
   const [editedPost, setEditedPost] = useState<Post>();
   const [search, setSearch] = useState<string>("");
   const [searchField, setSearchField] = useState<keyof Post>("title");
-  const { isLoading, data, refetch } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ["posts"],
+    staleTime: Infinity,
     queryFn: fetchPosts,
   });
 
@@ -106,7 +107,6 @@ const PostsPage = () => {
                 }}
                 onPostDelete={() => {
                   promptSuccess("Successfully deleted post");
-                  refetch();
                 }}
                 showActions={
                   user?.isAdmin || user?.username === blogPost.author.username
@@ -121,12 +121,10 @@ const PostsPage = () => {
           postCreated={() => {
             promptSuccess("Successfully created post");
             closeModal();
-            refetch();
           }}
           postEdited={() => {
             promptSuccess("Successfully edited post");
             closeModal();
-            refetch();
           }}
           postCreationFailed={() => {
             promptError("Error occured");
