@@ -38,13 +38,16 @@
   font-size: 1rem;
 }
 
-.edit-icon {
+.edit-icon,
+.upvote {
   fill: gray;
   transition: 0.2s;
   cursor: pointer;
 }
 
-.edit-icon:hover {
+.edit-icon:hover,
+.upvote:hover,
+.upvoted {
   fill: blue;
 }
 

@@ -16,6 +16,12 @@ const PostSchema = new mongoose.Schema({
   content: {
     type: String,
   },
+  upvotes: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      username: String,
+    },
+  ],
 });
 
 const Post = mongoose.model("post", PostSchema);

@@ -1,6 +1,7 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { io } from "socket.io-client";
+import { Photo } from "../models/photo";
 import { Post } from "../models/post";
 
 export const useSocketSubscription = (queryClient: QueryClient) => {
@@ -9,16 +10,26 @@ export const useSocketSubscription = (queryClient: QueryClient) => {
     const socket = io("http://localhost:3001", {
       extraHeaders: { Authorization: `Bearer ${token}` },
     });
-    socket.on("new-post", (data) =>
-      queryClient.setQueryData(["posts"], (oldData: Post[]) =>
-        [...oldData, data].sort(sortByDate)
-      )
-    );
-    socket.on("new-photo", (data) =>
-      queryClient.setQueryData(["photos"], (oldData: Post[]) =>
-        [...oldData, data].sort(sortByDate)
-      )
-    );
+    ["post", "photo"].forEach((entity) => {
+      socket.on(`new-${entity}`, (data) =>
+        queryClient.setQueryData([`${entity}s`], (oldData: Post[] | Photo[]) =>
+          [...oldData, data].sort(sortByDate)
+        )
+      );
+      socket.on(`updated-${entity}`, (data) =>
+        queryClient.setQueryData([`posts`], (oldData: Post[] | Photo[]) =>
+          oldData.map((currElement) =>
+            currElement._id === data._id ? data : currElement
+          )
+        )
+      );
+      socket.on(`deleted-${entity}`, (data) =>
+        queryClient.setQueryData([`${entity}s`], (oldData: { _id: string }[]) =>
+          oldData.filter((element) => element._id !== data._id)
+        )
+      );
+    });
+
     return () => {
       socket.close();
     };

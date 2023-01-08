@@ -3,8 +3,8 @@ import Login from "../Login/login";
 import "./postsPage.css";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import PostCard from "../../PostCard/postCard";
-import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "../../../services/post";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { fetchPosts, upvotePost } from "../../../services/post";
 import CreatePostModal from "../../CreatePostModal/createPostModal";
 import { Post } from "../../../models/post";
 import { promptError, promptSuccess } from "../../../services/toast";
@@ -32,6 +32,10 @@ const PostsPage = () => {
   } = useQuery({
     queryKey: ["user"],
     queryFn: getCurrentUser,
+  });
+
+  const { mutate: handlePostUpvote } = useMutation(async (postId: string) => {
+    return await upvotePost(postId);
   });
 
   const closeModal = () => {
@@ -111,6 +115,8 @@ const PostsPage = () => {
                 showActions={
                   user?.isAdmin || user?.username === blogPost.author.username
                 }
+                onUpvote={handlePostUpvote}
+                currentUser={user}
               />
             ))
           )}
