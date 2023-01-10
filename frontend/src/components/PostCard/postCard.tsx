@@ -6,24 +6,34 @@ import { Trash, Pencil, HandThumbsUp } from "react-bootstrap-icons";
 import DeletePostModal from "../DeletePostModal/deletePostModal";
 import classNames from "classnames";
 import { User } from "../../models/user";
+import { removePostUpvote, upvotePost } from "../../services/post";
+import { useMutation } from "@tanstack/react-query";
 
 interface PostCardProps {
   post: Post;
   onPostEdit: () => void;
   onPostDelete: () => void;
   showActions: boolean;
-  onUpvote: (postId: string) => void;
   currentUser: User;
 }
 
 const PostCard = (props: PostCardProps) => {
-  const { post, onPostEdit, showActions, onUpvote, currentUser } = props;
+  const { post, onPostEdit, showActions, currentUser } = props;
   const [showValidationModal, setShowValidationModal] =
     useState<boolean>(false);
 
   const closeModal = () => {
     setShowValidationModal(false);
   };
+
+  const { mutate: handlePostUpvote } = useMutation(async (postId: string) => {
+    return await upvotePost(postId);
+  });
+  const { mutate: handlePostCancelUpvote } = useMutation(
+    async (postId: string) => {
+      return await removePostUpvote(postId);
+    }
+  );
 
   const isUpvoted = useMemo(
     () =>
@@ -57,14 +67,9 @@ const PostCard = (props: PostCardProps) => {
             <HandThumbsUp
               className={classNames("upvote", { upvoted: isUpvoted })}
               onClick={() => {
-                if (!isUpvoted) {
-                  post.upvotes.push({ username: currentUser.username });
-                  onUpvote(post._id);
-                } else {
-                  post.upvotes.filter(
-                    (upvote) => upvote.username != currentUser.username
-                  );
-                }
+                isUpvoted
+                  ? handlePostCancelUpvote(post._id)
+                  : handlePostUpvote(post._id);
               }}
             />
           )}
@@ -75,8 +80,13 @@ const PostCard = (props: PostCardProps) => {
           {post.title}
           <span className="time-details">{dateString}</span>
         </Card.Title>
-        <div className="content">{post.content}</div>
+        <div className="post-content">{post.content}</div>
       </Card.Body>
+      {post?.upvotes.length > 0 && (
+        <Card.Footer>
+          <div className="upvotes-label">{post.upvotes.length} Upvotes</div>
+        </Card.Footer>
+      )}
       <DeletePostModal
         show={showValidationModal}
         post={post}

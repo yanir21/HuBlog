@@ -34,10 +34,6 @@ const PostsPage = () => {
     queryFn: getCurrentUser,
   });
 
-  const { mutate: handlePostUpvote } = useMutation(async (postId: string) => {
-    return await upvotePost(postId);
-  });
-
   const closeModal = () => {
     setEditedPost(undefined);
     setShowModal(false);
@@ -115,7 +111,6 @@ const PostsPage = () => {
                 showActions={
                   user?.isAdmin || user?.username === blogPost.author.username
                 }
-                onUpvote={handlePostUpvote}
                 currentUser={user}
               />
             ))

@@ -13,41 +13,32 @@ const createPost = async (req, res) => {
     author: user.id,
     date: new Date(),
   });
-  req.io.sockets.emit("new-post", {
-    ...createdPost._doc,
-    author: { username: user.username },
-  });
+  req.io.sockets.emit("new-post", createdPost);
   res.send("Post added successfully");
 };
 
 const deletePost = async (req, res) => {
-  Post.findByIdAndDelete(req.params.id, (error, postId) => {
+  Post.findByIdAndDelete(req.params.id, (error, post) => {
     if (error) {
       res.send(error);
     } else {
-      req.io.sockets.emit("deleted-post", postId);
+      req.io.sockets.emit("deleted-post", post);
       res.send("Post deleted successfully");
     }
   });
 };
 
 const editPost = async (req, res) => {
-  Post.findByIdAndUpdate(
-    req.params.id,
-    req.body.body,
-    { new: true },
-    (error, editedPost) => {
+  Post.findByIdAndUpdate(req.params.id, req.body.body, { new: true })
+    .populate("author")
+    .exec((error, editedPost) => {
       if (error) {
         res.send(error);
       } else {
-        req.io.sockets.emit("updated-post", {
-          ...editedPost._doc,
-          author: { username: req.root.username },
-        });
+        req.io.sockets.emit("updated-post", editedPost);
         res.send("Post updated successfully");
       }
-    }
-  );
+    });
 };
 
 const addLikeToPost = async (req, res) => {
@@ -58,14 +49,17 @@ const addLikeToPost = async (req, res) => {
         upvotes: { username: req.root.username },
       },
     },
-    (error) => {
+    { new: true }
+  )
+    .populate("author")
+    .exec((error, updatedPost) => {
       if (error) {
         res.send(error);
       } else {
+        req.io.sockets.emit("updated-post", updatedPost);
         res.send("Like added successfully");
       }
-    }
-  );
+    });
 };
 
 const removeLikeFromPost = async (req, res) => {
@@ -73,17 +67,20 @@ const removeLikeFromPost = async (req, res) => {
     req.params.id,
     {
       $pull: {
-        upvotes: req.body.like,
+        upvotes: { username: req.root.username },
       },
     },
-    (error) => {
+    { new: true }
+  )
+    .populate("author")
+    .exec((error, updatedPost) => {
       if (error) {
         res.send(error);
       } else {
+        req.io.sockets.emit("updated-post", updatedPost);
         res.send("Like removed successfully");
       }
-    }
-  );
+    });
 };
 
 module.exports = {

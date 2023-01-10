@@ -60,3 +60,10 @@
 .delete-icon:hover {
   fill: red;
 }
+
+.upvotes-label {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 7%;
+  color: gray;
+}
