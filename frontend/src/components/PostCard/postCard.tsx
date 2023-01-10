@@ -2,24 +2,46 @@ import React, { useMemo, useState } from "react";
 import "./postCard.css";
 import { Card } from "react-bootstrap";
 import { Post } from "../../models/post";
-import { Trash, Pencil } from "react-bootstrap-icons";
+import { Trash, Pencil, HandThumbsUp } from "react-bootstrap-icons";
 import DeletePostModal from "../DeletePostModal/deletePostModal";
+import classNames from "classnames";
+import { User } from "../../models/user";
+import { removePostUpvote, upvotePost } from "../../services/post";
+import { useMutation } from "@tanstack/react-query";
 
 interface PostCardProps {
   post: Post;
   onPostEdit: () => void;
   onPostDelete: () => void;
   showActions: boolean;
+  currentUser: User;
 }
 
 const PostCard = (props: PostCardProps) => {
-  const { post, onPostEdit, showActions } = props;
+  const { post, onPostEdit, showActions, currentUser } = props;
   const [showValidationModal, setShowValidationModal] =
     useState<boolean>(false);
 
   const closeModal = () => {
     setShowValidationModal(false);
   };
+
+  const { mutate: handlePostUpvote } = useMutation(async (postId: string) => {
+    return await upvotePost(postId);
+  });
+  const { mutate: handlePostCancelUpvote } = useMutation(
+    async (postId: string) => {
+      return await removePostUpvote(postId);
+    }
+  );
+
+  const isUpvoted = useMemo(
+    () =>
+      post.upvotes
+        .map((upvote) => upvote.username)
+        .includes(currentUser?.username),
+    [post, currentUser, post.upvotes.length]
+  );
 
   const dateString = useMemo(() => {
     const date = new Date(post.date);
@@ -33,7 +55,7 @@ const PostCard = (props: PostCardProps) => {
       <Card.Header>
         <div className="top-details">
           <span className="autor-details">{post.author.username}</span>
-          {showActions && (
+          {showActions ? (
             <span className="actions">
               <Pencil className="edit-icon" onClick={onPostEdit} />
               <Trash
@@ -41,6 +63,15 @@ const PostCard = (props: PostCardProps) => {
                 onClick={setShowValidationModal.bind(this, true)}
               />
             </span>
+          ) : (
+            <HandThumbsUp
+              className={classNames("upvote", { upvoted: isUpvoted })}
+              onClick={() => {
+                isUpvoted
+                  ? handlePostCancelUpvote(post._id)
+                  : handlePostUpvote(post._id);
+              }}
+            />
           )}
         </div>
       </Card.Header>
@@ -49,8 +80,13 @@ const PostCard = (props: PostCardProps) => {
           {post.title}
           <span className="time-details">{dateString}</span>
         </Card.Title>
-        <div className="content">{post.content}</div>
+        <div className="post-content">{post.content}</div>
       </Card.Body>
+      {post?.upvotes.length > 0 && (
+        <Card.Footer>
+          <div className="upvotes-label">{post.upvotes.length} Upvotes</div>
+        </Card.Footer>
+      )}
       <DeletePostModal
         show={showValidationModal}
         post={post}
