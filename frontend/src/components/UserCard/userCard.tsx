@@ -21,11 +21,6 @@ const UserCard = (props: UserCardProps) => {
     setShowValidationModal(false);
   };
 
-  const dateString = useMemo(() => {
-    const date = new Date(user.birthdate);
-    return `${date.toLocaleDateString()}`;
-  }, [user]);
-
   return (
     <div
       className={`user-card ${
