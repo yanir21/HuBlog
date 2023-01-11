@@ -86,6 +86,31 @@ const removeLikeFromPost = async (req, res) => {
     });
 };
 
+const getPostAmountByUserAndDate = async (req, res) => {
+  const pipeline = [
+    {
+      $group: {
+        _id: { userId: "$author", date: { $dateToString: { format: "%Y-%m-%d", date: "$date" } } },
+        count: { $sum: 1 }
+      }
+    }
+  ];
+
+  const posts = await Post.find({})
+    .populate({ path: "author", select: "-_id username" })
+    .populate({ path: "upvotes.user", select: "-_id username" })
+    .sort({ date: "desc" }).aggregate(pipeline).toArray(function(err, result) {
+      if (err) {
+        res.send(error);
+      } else {
+        console.log(result);
+      }
+    });;
+    
+
+}
+
+
 module.exports = {
   getAllPosts,
   createPost,
@@ -93,4 +118,5 @@ module.exports = {
   editPost,
   addLikeToPost,
   removeLikeFromPost,
+  getPostAmountByUserAndDate
 };

@@ -5,6 +5,7 @@ const {
   editPost,
   addLikeToPost,
   removeLikeFromPost,
+  getPostAmountByUserAndDate,
 } = require("../services/post");
 
 const express = require("express"),
@@ -23,5 +24,11 @@ router.delete(
   "/:id/like",
   async (req, res) => await removeLikeFromPost(req, res)
 );
+
+router.get("/amount", async (req, res) => {
+  res.json(await getPostAmountByUserAndDate());
+  return res;
+});
+
 
 module.exports = router;

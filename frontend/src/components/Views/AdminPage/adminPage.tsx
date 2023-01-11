@@ -6,8 +6,10 @@ import "./adminPage.css";
 import { User } from "../../../models/user";
 import { promptError, promptSuccess } from "../../../services/toast";
 import CreateUserModal from "../../CreateUserModal/CreateUserModal";
+import PostsGraph from "../../PostsGraph/postsGraph";
 import { Form, InputGroup } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
+import { Line } from 'react-chartjs-2';
 
 const searchOptions: (keyof User)[] = ["username", "email"];
 
@@ -88,6 +90,10 @@ const AdminPage = () => {
             showActions={!user?.isAdmin}
           />
         ))}
+      </div>
+      <div className="mid-row">
+        <div className="section-title">Post By Day</div>
+          <div className="posts-graph"><PostsGraph/></div>
       </div>
       <CreateUserModal
         show={showModal}
