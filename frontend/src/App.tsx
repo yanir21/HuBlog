@@ -8,8 +8,6 @@ import Router from "./router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSocketSubscription } from "./hooks/useReactQuerySubscription";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
 
 const queryClient = new QueryClient();
 

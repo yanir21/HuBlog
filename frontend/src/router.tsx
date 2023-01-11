@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./components/Views/Login/login";
 import Register from "./components/Views/Register/register";
@@ -9,22 +9,27 @@ import PhotosPage from "./components/Views/PhotosPage/photosPage";
 import AdminPage from "./components/Views/AdminPage/adminPage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
+import LoadingSpinner from "./components/LoadingSpinner/loadingSpinner";
 
 const Router = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   useEffect(
     () =>
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
           navigate("/");
         } else {
           navigate("/login");
         }
+        setLoading(false);
       }),
     []
   );
 
-  return (
+  return loading ? (
+    <LoadingSpinner />
+  ) : (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/posts" element={<PostsPage />} />

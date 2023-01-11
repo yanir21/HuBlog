@@ -3,7 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { Post } = require("./models/post");
-const { User } = require("./models/user");
 const socketIo = require("socket.io");
 const { verify, createRegisteredUser } = require("./services/auth");
 const http = require("http");
@@ -40,7 +39,7 @@ app.use(async (req, res, next) => {
   );
   req.io = io;
   req.root = await verify(req, res, next);
-  if (!res.destroyed) {
+  if (!res.finished) {
     next();
   } else {
     console.log("Response: ", res.statusCode, res.statusMessage);
@@ -59,8 +58,6 @@ const photoRoutes = require("./routers/photos");
 app.use("/photos", photoRoutes);
 
 const userRoutes = require("./routers/users");
-const { post } = require("./routers/posts");
-const { Photo } = require("./models/photo");
 app.use("/users", userRoutes);
 
 const start = async () => {

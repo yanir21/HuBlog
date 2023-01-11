@@ -10,6 +10,8 @@ http.interceptors.request.use(async (config) => {
   const token = await getToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    // window.location.href = "/login";
   }
   return config;
 });

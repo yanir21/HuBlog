@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  browserSessionPersistence,
+  getAuth,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { redirect } from "react-router-dom";
 
 const firebaseConfig = {
@@ -14,13 +18,5 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 export const auth = getAuth(firebaseApp);
-
-export const getToken = async () => {
-  let token = sessionStorage.getItem("token");
-  if (!token) {
-    token = await auth.currentUser.getIdToken();
-    sessionStorage.setItem("token", token);
-  }
-
-  return token;
-};
+auth.setPersistence(browserSessionPersistence);
+export const getToken = async () => await auth.currentUser?.getIdToken();

@@ -1,4 +1,5 @@
 const { User } = require("../models/user");
+const { admin } = require("./auth");
 
 const getAllUsers = async (req, res) => await User.find({}).select("-password");
 
@@ -7,6 +8,7 @@ const deleteUser = async (req, res) => {
     if (error) {
       res.send(error);
     } else {
+      admin.auth().deleteUser(req.params.id);
       res.send("User deleted successfully");
     }
   });

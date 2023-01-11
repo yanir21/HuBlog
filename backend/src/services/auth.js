@@ -30,4 +30,4 @@ const createRegisteredUser = async (req, res) => {
   return res.status(201).json(insertedUser);
 };
 
-module.exports = { verify, createRegisteredUser };
+module.exports = { verify, createRegisteredUser, admin };

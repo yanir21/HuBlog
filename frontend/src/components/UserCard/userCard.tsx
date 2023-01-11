@@ -45,10 +45,7 @@ const UserCard = (props: UserCardProps) => {
         )}
       </div>
       <div className="user-content">
-        <span className="username-birthdate">Born on: {dateString}</span>
-        <span className="username-rating">
-          Rating: {user.rating.toString()} Stars
-        </span>
+        <span className="user-email">{user.email}</span>
       </div>
       <DeleteUserModal
         show={showValidationModal}
