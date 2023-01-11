@@ -5,52 +5,35 @@ import { Button } from "react-bootstrap";
 import http from "../../../services/http";
 import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { promptSuccess } from "../../../services/toast";
-import { getCurrentUser } from "../../../services/user";
+import { promptError, promptSuccess } from "../../../services/toast";
+import { auth } from "../../../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorLabel, setErrorLabel] = useState<string>("");
 
   const { mutate, isLoading, error, data } = useMutation(
-    (user: { username: string; password: string }) => {
-      return http.post("/login", {
-        headers: { "Content-Type": "application/json" },
-        body: user,
-      });
-    },
+    (user: { email: string; password: string }) =>
+      signInWithEmailAndPassword(auth, email, password),
     {
-      onSuccess: ({ data }) => {
-        sessionStorage.setItem("token", data.token);
+      onSuccess: (data) => {
         promptSuccess("Successfully logged in");
         navigate("/");
-        userRefetch();
+        // userRefetch();
       },
-      onError: (err: AxiosError) => {
-        if ([404, 401].includes(err.response.status)) {
-          setErrorLabel("Invalid username or password");
-        }
-      },
+      onError: (err: AxiosError) => promptError("Invalid email or password"),
     }
   );
 
-  const {
-    isLoading: isUserLoading,
-    data: user,
-    refetch: userRefetch,
-  } = useQuery({
-    queryKey: ["user"],
-    queryFn: getCurrentUser,
-  });
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!password || !username) {
-      setErrorLabel("Please fill both username and password");
+    if (!password || !email) {
+      setErrorLabel("Please fill both email and password");
     } else {
-      mutate({ username, password });
+      mutate({ email, password });
     }
   };
 
@@ -63,14 +46,14 @@ const Login = () => {
         <div className="form-container">
           <div className="row">
             <div className="col-4">
-              <label htmlFor="username">Username:</label>
+              <label htmlFor="email">Email:</label>
             </div>
             <div className="col-6">
               <input
                 type="text"
-                id="username"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
+                id="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
               />
             </div>
           </div>

@@ -1,16 +1,17 @@
 const { Post } = require("../models/post");
+const { User } = require("../models/user");
 
 const getAllPosts = async () =>
   await Post.find({})
     .populate({ path: "author", select: "-_id username" })
+    .populate({ path: "upvotes.user", select: "-_id username" })
     .sort({ date: "desc" });
 
 const createPost = async (req, res) => {
-  const user = req.root;
   const post = req.body.body;
   const createdPost = await Post.create({
     ...post,
-    author: user.id,
+    author: req.root,
     date: new Date(),
   });
   req.io.sockets.emit("new-post", createdPost);
@@ -46,12 +47,13 @@ const addLikeToPost = async (req, res) => {
     req.params.id,
     {
       $addToSet: {
-        upvotes: { username: req.root.username },
+        upvotes: { user: req.root },
       },
     },
     { new: true }
   )
     .populate("author")
+    .populate("upvotes.user")
     .exec((error, updatedPost) => {
       if (error) {
         res.send(error);
@@ -67,12 +69,13 @@ const removeLikeFromPost = async (req, res) => {
     req.params.id,
     {
       $pull: {
-        upvotes: { username: req.root.username },
+        upvotes: { user: req.root },
       },
     },
     { new: true }
   )
     .populate("author")
+    .populate("upvotes.user")
     .exec((error, updatedPost) => {
       if (error) {
         res.send(error);

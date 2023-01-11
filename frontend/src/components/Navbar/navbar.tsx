@@ -1,11 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase";
 import { getCurrentUser } from "../../services/user";
 import "./navbar.css";
 const AppNavbar = () => {
+  const queryClient = useQueryClient();
   const {
     isLoading,
     data: user,
@@ -14,6 +16,11 @@ const AppNavbar = () => {
     queryKey: ["user"],
     queryFn: getCurrentUser,
   });
+
+  const logOut = () => {
+    auth.signOut();
+    queryClient.setQueryData(["user"], null);
+  };
 
   return (
     <Navbar bg="primary" variant="dark" className="navbar">
@@ -37,7 +44,12 @@ const AppNavbar = () => {
         )}
       </Nav>
       <div className="user-details">
-        {user && `Connected as ${user.username}`}
+        {user && (
+          <>
+            <span>Connected as {user.username}</span>
+            <Nav.Link onClick={logOut}>Log Out</Nav.Link>
+          </>
+        )}
       </div>
     </Navbar>
   );

@@ -21,11 +21,6 @@ const UserCard = (props: UserCardProps) => {
     setShowValidationModal(false);
   };
 
-  const dateString = useMemo(() => {
-    const date = new Date(user.birthdate);
-    return `${date.toLocaleDateString()}`;
-  }, [user]);
-
   return (
     <div
       className={`user-card ${
@@ -45,10 +40,7 @@ const UserCard = (props: UserCardProps) => {
         )}
       </div>
       <div className="user-content">
-        <span className="username-birthdate">Born on: {dateString}</span>
-        <span className="username-rating">
-          Rating: {user.rating.toString()} Stars
-        </span>
+        <span className="user-email">{user.email}</span>
       </div>
       <DeleteUserModal
         show={showValidationModal}

@@ -10,7 +10,7 @@ const PostSchema = new mongoose.Schema({
     required: true,
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
   },
   content: {
@@ -18,8 +18,8 @@ const PostSchema = new mongoose.Schema({
   },
   upvotes: [
     {
-      _id: mongoose.Schema.Types.ObjectId,
-      username: String,
+      _id: { type: mongoose.Schema.Types.ObjectId },
+      user: { type: String, ref: "User" },
     },
   ],
 });

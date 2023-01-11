@@ -1,11 +1,12 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { io } from "socket.io-client";
+import { getToken } from "../firebase";
 import { Photo } from "../models/photo";
 import { Post } from "../models/post";
 
 export const useSocketSubscription = (queryClient: QueryClient) => {
-  const token = sessionStorage.getItem("token");
+  const token = getToken();
   useEffect(() => {
     const socket = io("http://localhost:3001", {
       extraHeaders: { Authorization: `Bearer ${token}` },

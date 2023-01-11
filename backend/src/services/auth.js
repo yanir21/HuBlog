@@ -1,59 +1,33 @@
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+var admin = require("firebase-admin");
 
-const authenticate = (req, res, next) => {
-  const { username, password } = req.body.body;
-  User.findOne({ username }, (error, user) => {
-    if (error) {
-      res.status(500).json({ message: error });
-    } else if (!user) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      bcrypt.compare(password, user.password, (error, result) => {
-        if (error) {
-          res.status(500).json({ message: error });
-        } else if (result) {
-          // Generate a JWT and send it as the response
-          const token = jwt.sign(
-            { id: user.id, username: user.username },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "1d",
-            }
-          );
-          res.status(200).json({ token });
-        } else {
-          res.status(401).json({ message: "Incorrect password" });
-        }
-      });
-    }
-  });
-  return res;
-};
+var serviceAccount = require("../config/firebase-adminsdk.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 // Verify a JWT
-const verify = (req, res, next) => {
+const verify = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     res.status(401).json({ message: "No authorization header" });
   } else {
     const token = authorization.split(" ")[1];
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET,
-      (error, decoded) => {
-        if (error) {
-          res.status(401).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-    return decoded;
+    try {
+      return (await admin.auth().verifyIdToken(token)).sub;
+    } catch (err) {
+      res.status(403).send("Unauthorized");
+    }
   }
 };
 
-const getUser = (req, res) => {
-  User.findById(req.root.id, (err, user) => res.json(user));
+const createRegisteredUser = async (req, res) => {
+  const newUser = new User({ ...req.body.body, _id: req.root });
+  const insertedUser = await newUser.save();
+  return res.status(201).json(insertedUser);
 };
-module.exports = { verify, authenticate, getUser };
+
+module.exports = { verify, createRegisteredUser, admin };

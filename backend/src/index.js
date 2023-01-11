@@ -3,9 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { Post } = require("./models/post");
-const { User } = require("./models/user");
 const socketIo = require("socket.io");
-const { authenticate, verify, getUser } = require("./services/auth");
+const { verify, createRegisteredUser } = require("./services/auth");
 const http = require("http");
 require("dotenv").config();
 const PORT = 3001;
@@ -39,10 +38,8 @@ app.use(async (req, res, next) => {
     req.path
   );
   req.io = io;
-  if (req.path !== "/login" && req.path !== "/register") {
-    req.root = await verify(req, res, next);
-  }
-  if (!res.destroyed) {
+  req.root = await verify(req, res, next);
+  if (!res.finished) {
     next();
   } else {
     console.log("Response: ", res.statusCode, res.statusMessage);
@@ -52,14 +49,7 @@ app.use(async (req, res, next) => {
   });
 });
 
-app.post("/login", authenticate);
-app.get("/me", getUser);
-
-app.post("/register", async (req, res) => {
-  const newUser = new User({ ...req.body.body });
-  const insertedUser = await newUser.save();
-  return res.status(201).json(insertedUser);
-});
+app.post("/register", createRegisteredUser);
 
 const postRoutes = require("./routers/posts");
 app.use("/posts", postRoutes);

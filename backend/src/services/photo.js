@@ -4,11 +4,10 @@ const getAllPhotos = async () =>
   await Photo.find({}).populate({ path: "author", select: "-_id username" });
 
 const createPhoto = async (req, res) => {
-  const user = req.root;
   const photo = req.body.body;
   const createdPhoto = await Photo.create({
     ...photo,
-    author: user.id,
+    author: req.root,
     date: new Date(),
   });
   req.io.sockets.emit("new-photo", createdPhoto);
