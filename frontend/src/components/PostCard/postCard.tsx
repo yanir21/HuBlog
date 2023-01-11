@@ -45,7 +45,11 @@ const PostCard = (props: PostCardProps) => {
 
   const upvotesTooltip = useMemo(
     () => (
-      <Tooltip>{post.upvotes.map((upvote) => upvote.user.username)}</Tooltip>
+      <Tooltip>
+        {post.upvotes.map((upvote) => (
+          <div>{upvote.user.username}</div>
+        ))}
+      </Tooltip>
     ),
     [post.upvotes]
   );
