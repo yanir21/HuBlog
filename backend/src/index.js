@@ -5,7 +5,7 @@ const cors = require("cors");
 const { Post } = require("./models/post");
 const { User } = require("./models/user");
 const socketIo = require("socket.io");
-const { authenticate, verify, getUser } = require("./services/auth");
+const { verify, getUser } = require("./services/auth");
 const http = require("http");
 require("dotenv").config();
 const PORT = 3001;
@@ -39,9 +39,7 @@ app.use(async (req, res, next) => {
     req.path
   );
   req.io = io;
-  if (req.path !== "/login" && req.path !== "/register") {
-    req.root = await verify(req, res, next);
-  }
+  req.root = await verify(req, res, next);
   if (!res.destroyed) {
     next();
   } else {
@@ -51,9 +49,6 @@ app.use(async (req, res, next) => {
     console.log("Response: ", res.statusCode);
   });
 });
-
-app.post("/login", authenticate);
-app.get("/me", getUser);
 
 app.post("/register", async (req, res) => {
   const newUser = new User({ ...req.body.body });

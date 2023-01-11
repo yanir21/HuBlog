@@ -6,11 +6,10 @@ const getAllPosts = async () =>
     .sort({ date: "desc" });
 
 const createPost = async (req, res) => {
-  const user = req.root;
   const post = req.body.body;
   const createdPost = await Post.create({
     ...post,
-    author: user.id,
+    author: req.root,
     date: new Date(),
   });
   req.io.sockets.emit("new-post", createdPost);

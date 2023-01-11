@@ -18,9 +18,9 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  rating: {
-    type: Number,
-    default: 1,
+  email: {
+    type: String,
+    required: true,
   },
 });
 

@@ -6,14 +6,15 @@ import { Link } from "react-router-dom";
 import { getCurrentUser } from "../../services/user";
 import "./navbar.css";
 const AppNavbar = () => {
-  const {
-    isLoading,
-    data: user,
-    refetch,
-  } = useQuery({
-    queryKey: ["user"],
-    queryFn: getCurrentUser,
-  });
+  // const {
+  //   isLoading,
+  //   data: user,
+  //   refetch,
+  // } = useQuery({
+  //   queryKey: ["user"],
+  //   staleTime: Infinity,
+  //   queryFn: getCurrentUser,
+  // });
 
   return (
     <Navbar bg="primary" variant="dark" className="navbar">
@@ -30,14 +31,14 @@ const AppNavbar = () => {
         <Nav.Link as={Link} to="/photos">
           Photos
         </Nav.Link>
-        {user?.isAdmin && (
+        {/* {user?.isAdmin && (
           <Nav.Link as={Link} to="/admin">
             Manage Site
           </Nav.Link>
-        )}
+        )} */}
       </Nav>
       <div className="user-details">
-        {user && `Connected as ${user.username}`}
+        {/* {user && `Connected as ${user.username}`} */}
       </div>
     </Navbar>
   );

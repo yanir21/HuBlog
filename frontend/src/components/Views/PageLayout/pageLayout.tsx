@@ -4,6 +4,7 @@ import "./pageLayout.css";
 import { Button } from "react-bootstrap";
 import PostsPage from "../PostsPage/postsPage";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../../firebase";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -12,17 +13,10 @@ interface PageLayoutProps {
 const PageLayout = (props: PageLayoutProps) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    }
-  }, []);
-
   const logOut = () => {
-    sessionStorage.removeItem("token");
-    window.location.reload();
+    auth.signOut();
   };
+
   return (
     <div className="page-layout">
       {props.children}
