@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const PhotoSchema = new mongoose.Schema({
   author: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
   },
   date: {

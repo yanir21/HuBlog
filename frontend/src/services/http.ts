@@ -7,7 +7,6 @@ const http = axios.create({
 });
 
 http.interceptors.request.use(async (config) => {
-  console.log(auth.currentUser);
   if (auth.currentUser) {
     const token = await auth.currentUser.getIdToken(true);
     config.headers.Authorization = `Bearer ${token}`;

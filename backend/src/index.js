@@ -5,7 +5,7 @@ const cors = require("cors");
 const { Post } = require("./models/post");
 const { User } = require("./models/user");
 const socketIo = require("socket.io");
-const { verify, getUser } = require("./services/auth");
+const { verify, createRegisteredUser } = require("./services/auth");
 const http = require("http");
 require("dotenv").config();
 const PORT = 3001;
@@ -50,11 +50,7 @@ app.use(async (req, res, next) => {
   });
 });
 
-app.post("/register", async (req, res) => {
-  const newUser = new User({ ...req.body.body });
-  const insertedUser = await newUser.save();
-  return res.status(201).json(insertedUser);
-});
+app.post("/register", createRegisteredUser);
 
 const postRoutes = require("./routers/posts");
 app.use("/posts", postRoutes);
@@ -63,6 +59,8 @@ const photoRoutes = require("./routers/photos");
 app.use("/photos", photoRoutes);
 
 const userRoutes = require("./routers/users");
+const { post } = require("./routers/posts");
+const { Photo } = require("./models/photo");
 app.use("/users", userRoutes);
 
 const start = async () => {

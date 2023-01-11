@@ -19,13 +19,15 @@ const verify = async (req, res, next) => {
     try {
       return (await admin.auth().verifyIdToken(token)).sub;
     } catch (err) {
-      console.log(err);
       res.status(403).send("Unauthorized");
     }
   }
 };
 
-const getUser = (req, res) => {
-  User.findById(req.root, (err, user) => res.json(user));
+const createRegisteredUser = async (req, res) => {
+  const newUser = new User({ ...req.body.body, _id: req.root });
+  const insertedUser = await newUser.save();
+  return res.status(201).json(insertedUser);
 };
-module.exports = { verify, getUser };
+
+module.exports = { verify, createRegisteredUser };

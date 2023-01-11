@@ -15,8 +15,6 @@ const Router = () => {
   useEffect(
     () =>
       onAuthStateChanged(auth, (user) => {
-        console.log("aa");
-
         if (user) {
           navigate("/");
         } else {

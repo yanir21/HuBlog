@@ -22,4 +22,8 @@ const editUser = async (req, res) => {
   });
 };
 
-module.exports = { getAllUsers, deleteUser, editUser };
+const getCurrentUser = (req, res) => {
+  User.findById(req.root, (err, user) => res.json(user));
+};
+
+module.exports = { getAllUsers, deleteUser, editUser, getCurrentUser };

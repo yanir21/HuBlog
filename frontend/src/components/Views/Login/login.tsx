@@ -6,7 +6,6 @@ import http from "../../../services/http";
 import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import { promptError, promptSuccess } from "../../../services/toast";
-import { getCurrentUser } from "../../../services/user";
 import { auth } from "../../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -28,15 +27,6 @@ const Login = () => {
       onError: (err: AxiosError) => promptError("Invalid email or password"),
     }
   );
-
-  // const {
-  //   isLoading: isUserLoading,
-  //   data: user,
-  //   refetch: userRefetch,
-  // } = useQuery({
-  //   queryKey: ["user"],
-  //   queryFn: getCurrentUser,
-  // });
 
   const handleSubmit = (event) => {
     event.preventDefault();

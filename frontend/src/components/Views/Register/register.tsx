@@ -4,17 +4,24 @@ import "./register.css";
 import { Button } from "react-bootstrap";
 import http from "../../../services/http";
 import { Link, useNavigate } from "react-router-dom";
-import { promptSuccess } from "../../../services/toast";
+import { promptError, promptSuccess } from "../../../services/toast";
+import { auth } from "../../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { mutate, isLoading, error, data } = useMutation(
-    (user: { username: string; password: string }) => {
+    async () => {
+      await createUserWithEmailAndPassword(auth, email, password);
       return http.post("/register", {
         headers: { "Content-Type": "application/json" },
-        body: user,
+        body: {
+          username: username,
+          email: email,
+        },
       });
     },
     {
@@ -23,14 +30,15 @@ const Register = () => {
         navigate("/login");
       },
       onError: (error) => {
-        promptSuccess("Error occured");
+        promptError("Error occured");
+        console.log(error);
       },
     }
   );
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    mutate({ username, password });
+    mutate();
   };
 
   return (
@@ -40,6 +48,19 @@ const Register = () => {
       <h5>Register Now:</h5>
       <form onSubmit={handleSubmit}>
         <div className="form-container">
+          <div className="row">
+            <div className="col-4">
+              <label htmlFor="email">Email:</label>
+            </div>
+            <div className="col-6">
+              <input
+                type="text"
+                id="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+          </div>
           <div className="row">
             <div className="col-4">
               <label htmlFor="username">Username:</label>
@@ -53,7 +74,6 @@ const Register = () => {
               />
             </div>
           </div>
-          <br />
           <div className="row">
             <div className="col-4">
               <label htmlFor="password">Password:</label>
@@ -73,7 +93,7 @@ const Register = () => {
         </Button>
         <br />
         <br />
-        <Link to="/">Already have an account?</Link>
+        <Link to="/login">Already have an account?</Link>
       </form>
     </div>
   );
