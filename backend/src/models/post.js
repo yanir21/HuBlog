@@ -18,8 +18,8 @@ const PostSchema = new mongoose.Schema({
   },
   upvotes: [
     {
-      _id: mongoose.Schema.Types.ObjectId,
-      userId: String,
+      _id: { type: mongoose.Schema.Types.ObjectId },
+      user: { type: String, ref: "User" },
     },
   ],
 });

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import "./postCard.css";
-import { Card } from "react-bootstrap";
+import { Card, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Post } from "../../models/post";
 import { Trash, Pencil, HandThumbsUp } from "react-bootstrap-icons";
 import DeletePostModal from "../DeletePostModal/deletePostModal";
@@ -37,8 +37,17 @@ const PostCard = (props: PostCardProps) => {
 
   const isUpvoted = useMemo(
     () =>
-      post.upvotes.map((upvote) => upvote.userId).includes(currentUser?._id),
+      post.upvotes
+        .map((upvote) => upvote.user.username)
+        .includes(currentUser?.username),
     [post, currentUser, post.upvotes.length]
+  );
+
+  const upvotesTooltip = useMemo(
+    () => (
+      <Tooltip>{post.upvotes.map((upvote) => upvote.user.username)}</Tooltip>
+    ),
+    [post.upvotes]
   );
 
   const dateString = useMemo(() => {
@@ -82,7 +91,11 @@ const PostCard = (props: PostCardProps) => {
       </Card.Body>
       {post?.upvotes.length > 0 && (
         <Card.Footer>
-          <div className="upvotes-label">{post.upvotes.length} Upvotes</div>
+          <div className="upvotes-label">
+            <OverlayTrigger overlay={upvotesTooltip}>
+              <label>{post.upvotes.length} Upvotes</label>
+            </OverlayTrigger>
+          </div>
         </Card.Footer>
       )}
       <DeletePostModal
