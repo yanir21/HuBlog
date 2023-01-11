@@ -19,7 +19,7 @@ const PostSchema = new mongoose.Schema({
   upvotes: [
     {
       _id: mongoose.Schema.Types.ObjectId,
-      username: String,
+      userId: String,
     },
   ],
 });

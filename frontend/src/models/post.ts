@@ -6,5 +6,5 @@ export interface Post {
   date: Date;
   author: User;
   content: string;
-  upvotes: { username: string }[];
+  upvotes: { userId: string }[];
 }

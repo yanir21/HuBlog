@@ -14,3 +14,13 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 export const auth = getAuth(firebaseApp);
+
+export const getToken = async () => {
+  let token = sessionStorage.getItem("token");
+  if (!token) {
+    token = await auth.currentUser.getIdToken();
+    sessionStorage.setItem("token", token);
+  }
+
+  return token;
+};

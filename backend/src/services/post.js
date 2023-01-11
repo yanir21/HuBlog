@@ -42,12 +42,11 @@ const editPost = async (req, res) => {
 };
 
 const addLikeToPost = async (req, res) => {
-  const user = await User.findById(req.root);
   Post.findByIdAndUpdate(
     req.params.id,
     {
       $addToSet: {
-        upvotes: { username: user.username },
+        upvotes: { userId: req.root },
       },
     },
     { new: true }
@@ -64,12 +63,11 @@ const addLikeToPost = async (req, res) => {
 };
 
 const removeLikeFromPost = async (req, res) => {
-  const user = await User.findById(req.root);
   Post.findByIdAndUpdate(
     req.params.id,
     {
       $pull: {
-        upvotes: { username: user.username },
+        upvotes: { userId: req.root },
       },
     },
     { new: true }

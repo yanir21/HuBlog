@@ -1,14 +1,14 @@
 import axios from "axios";
 import { redirect } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth, getToken } from "../firebase";
 
 const http = axios.create({
   baseURL: "http://localhost:3001",
 });
 
 http.interceptors.request.use(async (config) => {
-  if (auth.currentUser) {
-    const token = await auth.currentUser.getIdToken(true);
+  const token = await getToken();
+  if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

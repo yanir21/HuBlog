@@ -37,9 +37,7 @@ const PostCard = (props: PostCardProps) => {
 
   const isUpvoted = useMemo(
     () =>
-      post.upvotes
-        .map((upvote) => upvote.username)
-        .includes(currentUser?.username),
+      post.upvotes.map((upvote) => upvote.userId).includes(currentUser?._id),
     [post, currentUser, post.upvotes.length]
   );
 
