@@ -5,6 +5,10 @@ export const fetchPosts = async (): Promise<Post[]> => {
   return (await http.get("/posts")).data;
 };
 
+export const fetchPostsAmountByUserAndDate = async (): Promise<Post[]> => {
+  return (await http.get("/posts/amount")).data;
+};
+
 export const upvotePost = async (postId: string): Promise<void> => {
   return (await http.post(`/posts/${postId}/like`)).data;
 };

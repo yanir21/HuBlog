@@ -87,6 +87,8 @@ const removeLikeFromPost = async (req, res) => {
 };
 
 const getPostAmountByUserAndDate = async (req, res) => {
+  console.log("Enter");
+ // res.send("MAMAMAMA removed successfully");
   const pipeline = [
     {
       $group: {
@@ -103,12 +105,13 @@ const getPostAmountByUserAndDate = async (req, res) => {
       if (err) {
         res.send(error);
       } else {
-        console.log(result);
+        console.log();
       }
     });;
-    
 
-}
+    console.log("posts: " + posts);
+    res.send(posts);
+};
 
 
 module.exports = {

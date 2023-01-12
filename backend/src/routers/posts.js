@@ -26,8 +26,7 @@ router.delete(
 );
 
 router.get("/amount", async (req, res) => {
-  res.json(await getPostAmountByUserAndDate());
-  return res;
+  await getPostAmountByUserAndDate();
 });
 
 
