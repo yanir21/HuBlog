@@ -6,83 +6,81 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchPostsAmountByUserAndDate } from "../../services/post";
 import { DataResult } from "@remix-run/router/dist/utils";
 
+type post = {
+  date: Date;
+  amount: number;
+};
+
+type Series = {
+  label: string;
+  data: post[];
+};
+
 const PostsGraph = () => {
   // const { data, randomizeData } = useDemoConfig({
-    // series: 3,
+  // series: 3,
   // dataType: "ordinal",
   // });
-  type post = {
-    date: Date,
-    amount: number,
-  }
-  
-  type Series = {
-    label: string,
-    data: post[]
-  }
-  // 
+
+  //
   // const data: Series[] = [
-    // {
-      // label: 'React Charts', // Will be author
-      // data: [
-        // {
-          // date: new Date(), // Date posted
-          // amount: 202123, // Amount posted
-        // }
-      // ]
-    // },
-    // {
-      // label: 'React Query',   // Will be author
-      // data: [
-        // {
-          // date: new Date(), // Date posted
-          // amount: 10234230, // Amount posted
-        // }
-//        ...
-      // ]
-    // }
+  // {
+  // label: 'React Charts', // Will be author
+  // data: [
+  // {
+  // date: new Date(), // Date posted
+  // amount: 202123, // Amount posted
+  // }
   // ]
-// 
-  const data = useQuery({
+  // },
+  // {
+  // label: 'React Query',   // Will be author
+  // data: [
+  // {
+  // date: new Date(), // Date posted
+  // amount: 10234230, // Amount posted
+  // }
+  //        ...
+  // ]
+  // }
+  // ]
+  //
+  const { data, isLoading } = useQuery({
     queryKey: ["postsandamount"],
     staleTime: Infinity,
     queryFn: fetchPostsAmountByUserAndDate,
   });
 
-  console.log(data);
-  
-  // const fixedData : Series[] = 
-    // data?.map((anObjectMapped, index) => {
-      // return (
-        // {
-          // label: anObjectMapped[index].author,   // Will be author
-          // data: [
-            // {
-              // date: anObjectMapped[index].date, // Date posted
-              // amount: anObjectMapped[index].sum, // Amount posted
-            // }
-          // ]
-        // }
-      // );
+  // const fixedData : Series[] =
+  // data?.map((anObjectMapped, index) => {
+  // return (
+  // {
+  // label: anObjectMapped[index].author,   // Will be author
+  // data: [
+  // {
+  // date: anObjectMapped[index].date, // Date posted
+  // amount: anObjectMapped[index].sum, // Amount posted
+  // }
+  // ]
+  // }
+  // );
   // });
 
-  
   const primaryAxis = React.useMemo(
     (): AxisOptions<post> => ({
-      getValue: datum => datum.date,
+      getValue: (datum) => datum.date,
     }),
     []
-  )
+  );
 
   const secondaryAxes = React.useMemo(
     (): AxisOptions<post>[] => [
       {
-        getValue: datum => datum.amount,
+        getValue: (datum) => datum.amount,
       },
     ],
     []
-  )
-
+  );
 
   return (
     <>
@@ -99,7 +97,6 @@ const PostsGraph = () => {
       </ResizableBox>
     </>
   );
-}
+};
 
 export default PostsGraph;
-  
