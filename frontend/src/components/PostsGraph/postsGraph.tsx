@@ -3,17 +3,22 @@ import useDemoConfig from "./useDemoConfig";
 import React, { useEffect, useState, useMemo } from "react";
 import { AxisOptions, Chart } from "react-charts";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchPostsAmountByUserAndDate } from "../../services/post";
+import { fetchPosts } from "../../services/post";
 import { DataResult } from "@remix-run/router/dist/utils";
 
-type post = {
+type Post = {
+  count: number;
   date: Date;
-  amount: number;
 };
 
+type authorPost = {
+  author: string;
+  date: Date[];
+}
+
 type Series = {
-  label: string;
-  data: post[];
+  author: string;
+  posts: Post[];
 };
 
 const PostsGraph = () => {
@@ -46,37 +51,64 @@ const PostsGraph = () => {
   // ]
   //
   const { data, isLoading } = useQuery({
-    queryKey: ["postsandamount"],
+    queryKey: ["posts"],
     staleTime: Infinity,
-    queryFn: fetchPostsAmountByUserAndDate,
+    queryFn: fetchPosts,
   });
+  
+  const aggregatedPosts = useMemo(
+    () => {
+      const groupedByAuthor = data?.reduce((acc , post) => {
+        const { author, date } = post;
+        if (!acc[author.username]) {
+            acc[author.username] = {};
+        }
+        if (!acc[author.username][date]) {
+            acc[author.username][date] = 0;
+        }
+        acc[author.username][date] += 1;
+        return acc;
+      }, {})
+      if (groupedByAuthor) {
+        const authors = Object.keys(groupedByAuthor);
+        return authors?.map((author) => {
+          return {
+              author,
+              posts: Object.entries(groupedByAuthor[author]).map(([date, count]) => {
+                  return { date, count };
+              })
+          };
+        });
+      }
+    },
+    [data]
+  );
 
-  // const fixedData : Series[] =
-  // data?.map((anObjectMapped, index) => {
-  // return (
-  // {
-  // label: anObjectMapped[index].author,   // Will be author
-  // data: [
-  // {
-  // date: anObjectMapped[index].date, // Date posted
-  // amount: anObjectMapped[index].sum, // Amount posted
-  // }
-  // ]
-  // }
-  // );
+  console.log(aggregatedPosts);
+
+  const seriesData: Series[] = [];
+
+  // const graphData = aggregatedPosts.map((serie) => {
+  //   const postsPerAuthor: Post[] = [];
+  //   serie.posts.forEach((post) => {
+        
+  //       postsPerAuthor.push(seriePost);
+  //   })
+  //   seriesData.push()
   // });
 
+
   const primaryAxis = React.useMemo(
-    (): AxisOptions<post> => ({
+    (): AxisOptions<Post> => ({
       getValue: (datum) => datum.date,
     }),
     []
   );
 
   const secondaryAxes = React.useMemo(
-    (): AxisOptions<post>[] => [
+    (): AxisOptions<Post>[] => [
       {
-        getValue: (datum) => datum.amount,
+        getValue: (datum) => datum.count,
       },
     ],
     []
@@ -87,13 +119,13 @@ const PostsGraph = () => {
       <br />
       <br />
       <ResizableBox>
-        {/* <Chart
+        {/* { <Chart
           options={{
-            fixedData,
+            aggregatedPosts,
             primaryAxis,
             secondaryAxes,
           }}
-        /> */}
+        /> } */}
       </ResizableBox>
     </>
   );

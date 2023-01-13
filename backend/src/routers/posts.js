@@ -16,9 +16,6 @@ router.get("/", async (req, res) => {
   return res;
 });
 router.post("/", async (req, res) => await createPost(req, res));
-router.get("/amount", async (req, res) => {
-  await getPostAmountByUserAndDate();
-});
 router.get("/:id", async (req, res) => {});
 router.delete("/:id", async (req, res) => await deletePost(req, res));
 router.put("/:id", async (req, res) => await editPost(req, res));
