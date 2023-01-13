@@ -93,5 +93,4 @@ module.exports = {
   editPost,
   addLikeToPost,
   removeLikeFromPost,
-  getPostAmountByUserAndDate
 };

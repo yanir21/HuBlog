@@ -5,7 +5,6 @@ const {
   editPost,
   addLikeToPost,
   removeLikeFromPost,
-  getPostAmountByUserAndDate,
 } = require("../services/post");
 
 const express = require("express"),
