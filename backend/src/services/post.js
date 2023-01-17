@@ -86,6 +86,26 @@ const removeLikeFromPost = async (req, res) => {
     });
 };
 
+const getPostAmountByUserAndDate = (req, res) => {
+  Post.aggregate(
+    [
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          count: { $sum: 1 },
+        },
+      },
+    ],
+    (err, result) => {
+      if (err) {
+        res.status(500).json({ error: err });
+      } else {
+        res.json(result);
+      }
+    }
+  );
+};
+
 module.exports = {
   getAllPosts,
   createPost,
@@ -93,4 +113,5 @@ module.exports = {
   editPost,
   addLikeToPost,
   removeLikeFromPost,
+  getPostAmountByUserAndDate,
 };
