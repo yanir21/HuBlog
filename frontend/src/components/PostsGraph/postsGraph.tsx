@@ -1,133 +1,74 @@
-import ResizableBox from "./resizableBox";
-import useDemoConfig from "./useDemoConfig";
-import React, { useEffect, useState, useMemo } from "react";
-import { AxisOptions, Chart } from "react-charts";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "../../services/post";
-import { DataResult } from "@remix-run/router/dist/utils";
+import React, { useEffect, useRef } from "react";
+import * as d3 from "d3";
 
-type Post = {
-  count: number | unknown;
-  date: Date | unknown;
-};
+const PostsGraph = ({ data, dimensions }) => {
+  const svgRef = useRef(null);
+  const { width, height, margin } = dimensions;
+  const svgWidth = width + margin.left + margin.right;
+  const svgHeight = height + margin.top + margin.bottom;
 
-type authorPost = {
-  author: string;
-  date: Date[];
-}
+  useEffect(() => {
+    debugger;
+    const xScale = d3
+      .scaleTime()
+      .domain(d3.extent(data, (d) => d._id))
+      .range([0, width]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([d3.min(data, (d) => d.count), d3.max(data, (d) => d.count)])
+      .range([height, 0]);
+    const svgEl = d3.select(svgRef.current);
+    svgEl.selectAll("*").remove(); // Clear svg content before adding new elements
+    const svg = svgEl
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+    // Add X grid lines with labels
+    const xAxis = d3
+      .axisBottom(xScale)
+      .ticks(5)
+      .tickSize(-height + margin.bottom);
+    const xAxisGroup = svg
+      .append("g")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
+      .call(xAxis);
+    xAxisGroup.select(".domain").remove();
+    xAxisGroup.selectAll("line").attr("stroke", "rgba(255, 255, 255, 0.2)");
+    xAxisGroup
+      .selectAll("text")
+      .attr("opacity", 0.5)
+      .attr("color", "white")
+      .attr("font-size", "0.75rem");
+    // Add Y grid lines with labels
+    const yAxis = d3
+      .axisLeft(yScale)
+      .ticks(5)
+      .tickSize(-width)
+      .tickFormat((val) => `${val}%`);
+    const yAxisGroup = svg.append("g").call(yAxis);
+    yAxisGroup.select(".domain").remove();
+    yAxisGroup.selectAll("line").attr("stroke", "rgba(255, 255, 255, 0.2)");
+    yAxisGroup
+      .selectAll("text")
+      .attr("opacity", 0.5)
+      .attr("color", "white")
+      .attr("font-size", "0.75rem");
+    // Draw the lines
+    const line = d3
+      .line()
+      .x((d) => xScale(d.date))
+      .y((d) => yScale(d.value));
+    // svg
+    //   .selectAll(".line")
+    //   .data(data)
+    //   .enter()
+    //   .append("path")
+    //   .attr("fill", "none")
+    //   .attr("stroke", (d) => d.color)
+    //   .attr("stroke-width", 3)
+    //   .attr("d", (d) => line(d.items));
+  }, [data]); // Redraw chart if data changes
 
-type Series = {
-  author: string;
-  posts: Post[];
-};
-
-const PostsGraph = () => {
-  // const { data, randomizeData } = useDemoConfig({
-  // series: 3,
-  // dataType: "ordinal",
-  // });
-
-  // const trydata = [
-  //   {
-  //     label: 'React Charts',
-  //     data: [
-  //       {
-  //         date: new Date(),
-  //         stars: 23467238,
-  //       },
-  //     ],
-  //   },
-  // ]
-  // const data: Series[] = [
-  // {
-  // author: 'React Charts', // Will be author
-  // posts: [
-  // {
-  // date: new Date(), // Date posted
-  // count: 202123, // Amount posted
-  // }
-  // ]
-  // },
-  // {
-  // author: 'React Query',   // Will be author
-  // posts: [
-  // {
-  // date: new Date(), // Date posted
-  // count: 10234230, // Amount posted
-  // }
-  // ]
-  // }
-  // ]
-  
-  const { data, isLoading } = useQuery({
-    queryKey: ["posts"],
-    staleTime: Infinity,
-    queryFn: fetchPosts,
-  });
-  
-  const aggregatedPosts : Series[] = useMemo(
-    () => {
-      const groupedByAuthor = data?.reduce((acc , post) => {
-        const { author, date } = post;
-        if (!acc[author.username]) {
-            acc[author.username] = {};
-        }
-        if (!acc[author.username][date]) {
-            acc[author.username][date] = 0;
-        }
-        acc[author.username][date] += 1;
-        return acc;
-      }, {})
-      if (groupedByAuthor) {
-        const authors = Object.keys(groupedByAuthor);
-        return authors?.map((author) => {
-          const serie : Series = {
-            author,
-            posts: Object.entries(groupedByAuthor[author]).map(([date, count]) => {
-              const post: Post = { count, date };
-              return post;
-            })
-          };
-          return serie;
-        });
-      }
-    },
-    [data]
-  );
-
-  // console.log(aggregatedPosts);
-
-  const primaryAxis = React.useMemo(
-    (): AxisOptions<Post> => ({
-      getValue: (datum) => datum.date,
-    }),
-    []
-  );
-
-  const secondaryAxes = React.useMemo(
-    (): AxisOptions<Post>[] => [
-      {
-        getValue: (datum) => datum.count,
-      },
-    ],
-    []
-  );
-
-  return (
-    <>
-      <br />
-      <br />
-      <ResizableBox>
-        { <Chart
-          options={{
-            aggregatedPosts,
-            primaryAxis,
-            secondaryAxes,
-          }}
-        /> }
-      </ResizableBox>
-    </>
-  );
+  return <svg ref={svgRef} width={svgWidth} height={svgHeight} />;
 };
 
 export default PostsGraph;

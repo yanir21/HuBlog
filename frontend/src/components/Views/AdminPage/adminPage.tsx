@@ -9,9 +9,15 @@ import CreateUserModal from "../../CreateUserModal/CreateUserModal";
 import PostsGraph from "../../PostsGraph/postsGraph";
 import { Form, InputGroup } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
-import { Line } from 'react-chartjs-2';
+import { fetchPostsByDate } from "../../../services/post";
 
 const searchOptions: (keyof User)[] = ["username", "email"];
+
+const dimensions = {
+  width: 600,
+  height: 300,
+  margin: { top: 30, right: 30, bottom: 30, left: 60 },
+};
 
 const AdminPage = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -27,6 +33,11 @@ const AdminPage = () => {
   const { data: users, refetch } = useQuery({
     queryKey: ["allUsers"],
     queryFn: getAllUsers,
+  });
+
+  const { data: postsAmount } = useQuery({
+    queryKey: ["posts-amount"],
+    queryFn: fetchPostsByDate,
   });
 
   const closeModal = () => {
@@ -93,7 +104,11 @@ const AdminPage = () => {
       </div>
       <div className="mid-row">
         <div className="section-title">Post By Day</div>
-          <div className="posts-graph"><PostsGraph/></div>
+        <div className="posts-graph">
+          {postsAmount && (
+            <PostsGraph dimensions={dimensions} data={postsAmount} />
+          )}
+        </div>
       </div>
       <CreateUserModal
         show={showModal}
