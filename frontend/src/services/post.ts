@@ -13,6 +13,6 @@ export const removePostUpvote = async (postId: string): Promise<void> => {
   return (await http.delete(`/posts/${postId}/like`)).data;
 };
 
-export const fetchPostsByDate = async (): Promise<Post[]> => {
+export const fetchPostsByDate = async (): Promise<{_id: Date, count: number}[]> => {
   return (await http.get("/posts/amount")).data;
 };

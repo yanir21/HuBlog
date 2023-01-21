@@ -106,7 +106,7 @@ const AdminPage = () => {
         <div className="section-title">Post By Day</div>
         <div className="posts-graph">
           {postsAmount && (
-            <PostsGraph dimensions={dimensions} data={postsAmount} />
+            <PostsGraph/>
           )}
         </div>
       </div>
