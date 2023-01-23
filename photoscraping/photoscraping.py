@@ -41,7 +41,7 @@ for image_tag in image_tags:
     image_url = image_tag['src']
     # Insert the image URL into the MongoDB collection
     print(image_url)
-    collection.insert_one({'author': ObjectId(ADMIN_ID), 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'url': image_url})
+    collection.insert_one({'author': ObjectId(ADMIN_ID), 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
 
 # Close the connection to the database
 client.close()

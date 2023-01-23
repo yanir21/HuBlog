@@ -6,4 +6,16 @@
   color: white;
   margin-right: 10px;
   font-weight: 600;
+  display: flex;
+}
+
+.log-out-button {
+  margin-left: 10px;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.log-out-button:hover {
+  opacity: 1;
 }

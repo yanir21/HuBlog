@@ -12,11 +12,13 @@ const HomePage = () => (
           Welcome to <label className="site-name">HuBlog!</label>
         </h2>
         <div className="link-container">
-          <Link to="/posts" className="link">
-            Browse Posts
+          <Link to="/posts" className="post-container">
+            <div className="bg-image bg-post-image"></div>
+            <div className="bg-text">Browse Posts</div>
           </Link>
-          <Link to="/photos" className="link">
-            Browse Photos
+          <Link to="/photos" className="post-container">
+            <div className="bg-image bg-photo-image"></div>
+            <div className="bg-text">Browse Photos</div>
           </Link>
         </div>
       </div>

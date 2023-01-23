@@ -10,6 +10,7 @@ const AppNavbar = () => {
   const queryClient = useQueryClient();
   const { isLoading, data: user } = useQuery({
     queryKey: ["user"],
+    staleTime: Infinity,
     queryFn: getCurrentUser,
     staleTime: Infinity,
   });
@@ -44,7 +45,9 @@ const AppNavbar = () => {
         {user && (
           <>
             <span>Connected as {user.username}</span>
-            <Nav.Link onClick={logOut}>Log Out</Nav.Link>
+            <div className="log-out-button" onClick={logOut}>
+              Log Out
+            </div>
           </>
         )}
       </div>
