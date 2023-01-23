@@ -14,7 +14,7 @@ const createPost = async (req, res) => {
     author: req.root,
     date: new Date(),
   });
-  req.io.sockets.emit("new-post", createdPost);
+  req.io.sockets.emit("new-post", await createdPost.populate("author"));
   res.send("Post added successfully");
 };
 
