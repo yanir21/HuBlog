@@ -12,7 +12,6 @@ const AppNavbar = () => {
     queryKey: ["user"],
     staleTime: Infinity,
     queryFn: getCurrentUser,
-    staleTime: Infinity,
   });
 
   const logOut = () => {
