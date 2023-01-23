@@ -8,14 +8,11 @@ import { getCurrentUser } from "../../services/user";
 import "./navbar.css";
 const AppNavbar = () => {
   const queryClient = useQueryClient();
-  const {
-    isLoading,
-    data: user,
-    refetch,
-  } = useQuery({
+  const { isLoading, data: user } = useQuery({
     queryKey: ["user"],
     staleTime: Infinity,
     queryFn: getCurrentUser,
+    staleTime: Infinity,
   });
 
   const logOut = () => {
@@ -25,7 +22,7 @@ const AppNavbar = () => {
 
   return (
     <Navbar bg="primary" variant="dark" className="navbar">
-      <Navbar.Brand href="/" className="brand">
+      <Navbar.Brand as={Link} to="/" className="brand">
         HuBlog
       </Navbar.Brand>
       <Nav className="me-auto">

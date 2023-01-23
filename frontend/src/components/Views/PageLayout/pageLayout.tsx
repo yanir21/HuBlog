@@ -5,16 +5,17 @@ import { Button } from "react-bootstrap";
 import PostsPage from "../PostsPage/postsPage";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../../firebase";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PageLayoutProps {
   children: ReactNode;
 }
 
 const PageLayout = (props: PageLayoutProps) => {
-  const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const logOut = () => {
     auth.signOut();
+    queryClient.setQueryData(["user"], null);
   };
 
   return (

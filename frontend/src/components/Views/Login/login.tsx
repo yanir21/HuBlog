@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import "./login.css";
 import { Button } from "react-bootstrap";
 import http from "../../../services/http";
@@ -22,7 +22,6 @@ const Login = () => {
       onSuccess: (data) => {
         promptSuccess("Successfully logged in");
         navigate("/");
-        // userRefetch();
       },
       onError: (err: AxiosError) => promptError("Invalid email or password"),
     }

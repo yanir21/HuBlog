@@ -11,18 +11,16 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import LoadingSpinner from "./components/LoadingSpinner/loadingSpinner";
 import { useQueryClient } from "@tanstack/react-query";
-import { getCurrentUser } from "./services/user";
 
 const Router = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   useEffect(
     () =>
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          const loadedUser = await getCurrentUser();
-          queryClient.setQueryData(["user"], () => loadedUser);
+          queryClient.invalidateQueries(["user"]);
         } else {
           navigate("/login");
         }
