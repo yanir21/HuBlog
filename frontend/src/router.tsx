@@ -10,15 +10,17 @@ import AdminPage from "./components/Views/AdminPage/adminPage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import LoadingSpinner from "./components/LoadingSpinner/loadingSpinner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Router = () => {
   const [loading, setLoading] = useState<boolean>(true);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   useEffect(
     () =>
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          navigate("/");
+          queryClient.invalidateQueries(["user"]);
         } else {
           navigate("/login");
         }

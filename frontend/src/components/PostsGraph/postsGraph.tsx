@@ -12,7 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { sortByidDesc } from "../../hooks/useReactQuerySubscription";
+import { sortByidDesc } from "../../hooks/useSocketSubscription";
 
 ChartJS.register(
   CategoryScale,
