@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSocketSubscription } from "./hooks/useReactQuerySubscription";
+import { useSocketSubscription } from "./hooks/useSocketSubscription";
 
 const queryClient = new QueryClient();
 

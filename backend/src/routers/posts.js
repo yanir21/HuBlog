@@ -5,6 +5,7 @@ const {
   editPost,
   addLikeToPost,
   removeLikeFromPost,
+  getPostAmountByUserAndDate,
 } = require("../services/post");
 
 const express = require("express"),
@@ -15,6 +16,10 @@ router.get("/", async (req, res) => {
   return res;
 });
 router.post("/", async (req, res) => await createPost(req, res));
+router.get(
+  "/amount",
+  async (req, res) => await getPostAmountByUserAndDate(req, res)
+);
 router.get("/:id", async (req, res) => {});
 router.delete("/:id", async (req, res) => await deletePost(req, res));
 router.put("/:id", async (req, res) => await editPost(req, res));

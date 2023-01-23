@@ -37,8 +37,14 @@ export const useSocketSubscription = (queryClient: QueryClient) => {
   }, [queryClient]);
 };
 
-const sortByDate = (a: { date: string }, b: { date: string }) => {
+export const sortByDate = (a: { date: string }, b: { date: string }) => {
   const date1 = a.date.split("/").reverse().join("");
   const date2 = b.date.split("/").reverse().join("");
   return date2 > date1 ? 1 : date2 < date1 ? -1 : 0;
+};
+
+export const sortByidDesc = (a: { _id: string }, b: { _id: string }) => {
+  const date1 = a._id.split("/").reverse().join("");
+  const date2 = b._id.split("/").reverse().join("");
+  return date2 < date1 ? 1 : date2 > date1 ? -1 : 0;
 };

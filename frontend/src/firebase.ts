@@ -1,10 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  browserSessionPersistence,
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { redirect } from "react-router-dom";
+import { browserSessionPersistence, getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKT7PtLaiCcT7tL365gCTgiSpGa75E20I",
