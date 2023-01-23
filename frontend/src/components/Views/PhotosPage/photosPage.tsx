@@ -41,7 +41,7 @@ const PhotosPage = () => {
   const filteredPhotos = useMemo(
     () =>
       searchField === "author"
-        ? data.filter((photo) => photo.author.username.includes(search))
+        ? data.filter((photo) => photo.author?.username.includes(search))
         : data?.filter((photo) =>
             photo?.[searchField]?.toString().includes(search)
           ),
@@ -113,7 +113,7 @@ const PhotosPage = () => {
                     }}
                     showActions={
                       user?.isAdmin ||
-                      user.username === blogPhoto.author.username
+                      user?.username === blogPhoto.author.username
                     }
                   />
                 </span>

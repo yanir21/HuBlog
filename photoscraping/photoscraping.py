@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 from dotenv.main import load_dotenv
 import os
 
-ADMIN_ID = '63a71ae30ec0c6f16f01ffee'
+ADMIN_ID = 'GsVWsdtACjeLGEITCFEQof3D9Kw1'
 load_dotenv()
 MONGO_USERNAME=os.environ['MONGO_USERNAME']
 MONGO_PASSWORD=os.environ['MONGO_PASSWORD']
@@ -32,6 +32,6 @@ tags = ['website', 'animal']
 for image_tag in image_tags:
     image_url = image_tag['src']
     print(image_url)
-    collection.insert_one({'author': ObjectId(ADMIN_ID), 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
+    collection.insert_one({'author': ADMIN_ID, 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
 
 client.close()
