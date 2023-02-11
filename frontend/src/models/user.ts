@@ -3,5 +3,4 @@ export interface User {
   email: string;
   username: string;
   isAdmin: boolean;
-  rating: number;
 }

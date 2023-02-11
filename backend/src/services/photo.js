@@ -1,7 +1,9 @@
 const { Photo } = require("../models/photo");
 
 const getAllPhotos = async () =>
-  await Photo.find({}).populate({ path: "author", select: "-_id username" });
+  await Photo.find({})
+    .populate({ path: "author", select: "-_id username" })
+    .sort({ date: "desc" });
 
 const createPhoto = async (req, res) => {
   const photo = req.body.body;

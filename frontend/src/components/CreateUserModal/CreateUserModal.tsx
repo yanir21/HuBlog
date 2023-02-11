@@ -11,28 +11,26 @@ interface CreateUserModalProps {
   existingUser?: User;
 }
 const CreateUserModal = (props: CreateUserModalProps) => {
-  const [rating, setRating] = useState<number>(1);
+  const [username, setUsername] = useState<string>("");
 
   useEffect(() => {
     const { existingUser } = props;
     if (existingUser) {
-      setRating(existingUser.rating);
-    } else {
-      setRating(1);
+      setUsername(existingUser.username);
     }
   }, [props.existingUser]);
 
   const [errorMessage, setErrorMessage] = useState<String>("");
-  const { mutate, isLoading, error, data } = useMutation(
-    (user: { rating: number }) => {
+  const { mutate } = useMutation(
+    (user: { username: string }) => {
       return http.put(`/users/${props.existingUser._id}`, {
         headers: { "Content-Type": "application/json" },
         body: user,
-      })
+      });
     },
     {
       onSuccess: ({ data }) => {
-         props.userEdited();
+        props.userEdited();
       },
       onError: (err) => {
         props.userEditFailed();
@@ -41,8 +39,8 @@ const CreateUserModal = (props: CreateUserModalProps) => {
   );
 
   const validateForm = () => {
-    if (rating > 5 || rating < 0 || rating === undefined) {
-      setErrorMessage("Rating can't be more than 5 or lower than 0!");
+    if (!username || username.length < 3) {
+      setErrorMessage("Username can't be less than 3 characters long!");
       return false;
     }
 
@@ -51,24 +49,26 @@ const CreateUserModal = (props: CreateUserModalProps) => {
 
   const submitForm = () => {
     if (validateForm()) {
-      mutate({ rating: rating });
+      mutate({ username: username });
     }
   };
 
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>
-          {"Edit user"}{" "}
-        </Modal.Title>
+        <Modal.Title>{"Edit user"} </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <FloatingLabel controlId="floatingInput" label="Rating" className="mb-3">
+        <FloatingLabel
+          controlId="floatingInput"
+          label="Username"
+          className="mb-3"
+        >
           <Form.Control
             type="text"
-            placeholder="Enter A Rating"
-            value={rating}
-            onChange={({ target }) => setRating(Number(target.value))}
+            placeholder="Enter A Username"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
           />
         </FloatingLabel>
         {errorMessage && <span className="error-message">{errorMessage}</span>}
