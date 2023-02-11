@@ -25,13 +25,14 @@ soup = BeautifulSoup(html, 'html.parser')
 
 image_tags = soup.find_all('img')
 
-nowdatetime = datetime.today().replace(microsecond=0)
+nowdatetime = datetime.utcnow().replace(microsecond=0)
 tags = ['website', 'animal']
 
 
 for image_tag in image_tags:
     image_url = image_tag['src']
     print(image_url)
-    collection.insert_one({'author': ADMIN_ID, 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
+    if(image_url!='https://www.facebook.com/tr?id=262767591103921&ev=PageView&noscript=1' and image_url!='https://www.pbs.org/wnet/nature/wp-content/themes/nature-2014/libs/images/logo.png'):
+        collection.insert_one({'author': ADMIN_ID, 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
 
 client.close()
