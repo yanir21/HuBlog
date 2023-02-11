@@ -17,7 +17,7 @@ client = pymongo.MongoClient(MONGO_URI)
 db = client['hublog']
 collection = db['photos']
 
-response = requests.get('https://www.pbs.org/wnet/nature/group/mammals/') 
+response = requests.get('https://www.pbs.org/wnet/nature/group/other-species/') 
 
 html = response.content
 
@@ -32,7 +32,6 @@ tags = ['website', 'animal']
 for image_tag in image_tags:
     image_url = image_tag['src']
     print(image_url)
-    if(image_url!='https://www.facebook.com/tr?id=262767591103921&ev=PageView&noscript=1' and image_url!='https://www.pbs.org/wnet/nature/wp-content/themes/nature-2014/libs/images/logo.png'):
-        collection.insert_one({'author': ADMIN_ID, 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
+    collection.insert_one({'author': ADMIN_ID, 'date': nowdatetime, 'caption': "From Website", 'tags': tags, 'imageUrl': image_url})
 
 client.close()
